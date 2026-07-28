@@ -691,3 +691,35 @@
       raffle:
         settings: default
     - type: Cluwne
+
+
+## ! CUSTOM
+
+- type: entity
+  id: RandomHumanoidSpawnerPMCUnit
+  name: PMC Mercenary
+  components:
+    - type: Sprite
+      sprite: Mobs/Species/Human/parts.rsi
+      state: full
+    - type: RandomHumanoidSpawner
+      settings: PMCMercenary
+
+- type: randomHumanoidSettings
+  id: PMCMercenary
+  parent: EventHumanoid
+  components:
+    - type: Loadout
+      prototypes: [PMCGear]
+      roleLoadout: [ RoleSurvivalMilitaryDouble ]
+    - type: GhostRole
+      name: PMC Mercenary
+      description: Infiltrate the station, wipe out all command members, take control.
+      rules: ghost-role-information-freeagent-rules
+      raffle:
+        settings: short
+    - type: RandomMetadata
+      nameSegments:
+      - NamesMilitaryFirst
+      - NamesMilitaryLast
+      nameFormat: name-format-ert
