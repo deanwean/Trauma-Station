@@ -1,0 +1,58 @@
+- type: gameMap
+  id: WizVoyager
+  mapName: 'Wiz Voyager'
+  mapPath: /Maps/wiz_voyager.yml
+  minPlayers: 0
+  maxPlayers: 36
+  stations:
+    WizVoyager:
+      stationProto: StandardNanotrasenStation
+      components:
+        - type: StationNameSetup
+          mapNameTemplate: '{0} Voyager {1}'
+          nameGenerator:
+            !type:NanotrasenNameGenerator
+            prefixCreator: ' WZ'
+        - type: StationEmergencyShuttle
+          emergencyShuttlePath: /Maps/Shuttles/emergency.yml
+        - type: StationJobs
+          availableJobs:
+            #Command (7)
+            Captain: [ 1, 1 ]
+            HeadOfPersonnel: [ 1, 1 ]
+            HeadOfSecurity: [ 1, 1 ]
+            ChiefMedicalOfficer: [ 1, 1 ]
+            ChiefEngineer: [ 1, 1 ]
+            ResearchDirector: [ 1, 1 ]
+            Quartermaster: [ 1, 1 ]
+            #Service (4)
+            Bartender: [ 1, 1 ]
+            Botanist: [ 1, 1 ]
+            Chef: [ 1, 1 ]
+            Janitor: [ 1, 1 ]
+            #Engineering (4)
+            AtmosphericTechnician: [ 2, 2 ]
+            StationEngineer: [ 2, 2 ]
+            TechnicalAssistant: [ 1, 1 ] #intern, exclude from dept count
+            #Medical (4)
+            Chemist: [ 1, 1 ]
+            MedicalDoctor: [ 2, 2 ]
+            Paramedic: [ 1, 1 ]
+            MedicalIntern: [ 1, 1 ] #intern, exclude from dept count
+            #Science (2)
+            Scientist: [ 2, 2 ]
+            ResearchAssistant: [ 1, 1 ] #intern, exclude from dept count
+            #Security (6)
+            Warden: [ 1, 1 ]
+            SecurityOfficer: [ 2, 2 ]
+            Detective: [ 1, 1 ]
+            SecurityCadet: [ 1, 1 ] #intern, exclude from dept count
+            Lawyer: [ 1, 1 ]
+            #Supply (4)
+            SalvageSpecialist: [ 2, 2 ]
+            CargoTechnician: [ 2, 2 ]
+            #Civilian (inf)
+            Passenger: [ -1, -1 ] #infinite, not counted
+            #Silicon (3)
+            StationAi: [ 1, 1 ]
+            Borg: [ 2, 2 ]
