@@ -59528,13 +59528,6 @@ entities:
     - type: Transform
       parent: 2
       pos: 30.5,16.5
-- proto: CrateSydicateCombatSkillChips
-  entities:
-  - uid: 18756
-    components:
-    - type: Transform
-      parent: 10434
-      pos: 4.5,-0.5
 - proto: CrateSyndicate
   entities:
   - uid: 10996

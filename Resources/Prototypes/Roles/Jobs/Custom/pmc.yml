@@ -1,0 +1,14 @@
+- type: startingGear
+  id: PMCGear
+  equipment:
+    jumpsuit: ClothingUniformJumpsuitMilitaryTurtleneckMercenary
+    back: ClothingBackpackMerc
+    head: ClothingHeadHatBeretMerc
+    mask: ClothingMaskGasMerc
+    eyes: ClothingEyesGlassesMercenary
+    ears: ClothingHeadsetAltFreelancer
+    gloves: ClothingHandsMercGlovesCombat
+    outerClothing: ClothingOuterVestWebMerc
+    shoes: ClothingShoesBootsMercFilled
+    id: PiratePDA
+    belt: ClothingBeltMercWebbing
