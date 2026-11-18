@@ -157,7 +157,7 @@
   productEntity: SpawnPodCoin
   icon:
     sprite: Objects/Misc/coins.rsi
-    state: coin_gold
+    state: coinGold_1
   cost:
     NTLoyaltyPoint: 10
   categories:
@@ -313,25 +313,6 @@
   restockAfterPurchase: 30m
 
 # Machine boards
-
-- type: listing
-  id: NTRExecutiveFlatpack
-  name: ntr-executive-task-console-name
-  description: ntr-executive-task-console-desc
-  productEntity: SpawnPodTaskFlatpack
-  icon:
-    sprite: Objects/Devices/flatpack.rsi
-    state: base
-  cost:
-    NTLoyaltyPoint: 0
-  categories:
-  - NTRBoards
-  restockTime: 5m
-  resetRestockOnPurchase: true
-  restockAfterPurchase: 20m
-  conditions:
-  - !type:ListingLimitedStockCondition
-    stock: 2 # come on man, skill issue if you lost 3 consoles
 
 - type: listing
   id: NTRExecutiveTelecom

@@ -17,7 +17,13 @@ namespace Content.Trauma.Client.Heretic.Systems;
 public sealed partial class ShadowCloakSystem : SharedShadowCloakSystem
 {
     [Dependency] private AppearanceSystem _appearance = default!;
+    [Dependency] private SpriteSystem _sprite = default!;
     [Dependency] private CommonSpriteVisibilitySystem _spriteVis = default!;
+    [Dependency] private EntityQuery<SpriteComponent> _spriteQuery = default!;
+
+    private TimeSpan _nextUpdate;
+
+    private static readonly TimeSpan UpdateDelay = TimeSpan.FromSeconds(1);
 
 
     public override void Initialize()
@@ -34,10 +40,53 @@ public sealed partial class ShadowCloakSystem : SharedShadowCloakSystem
         SubscribeLocalEvent<ShadowCloakedComponent, SpriteOverlayUpdatedEvent<VoidCurseComponent>>(UpdateOverlay);
         SubscribeLocalEvent<ShadowCloakedComponent, SpriteOverlayUpdatedEvent<HereticArenaParticipantComponent>>(UpdateOverlay);
         SubscribeLocalEvent<ShadowCloakedComponent, SpriteOverlayUpdatedEvent<AimedRifleMarkerComponent>>(UpdateOverlay);
+        SubscribeLocalEvent<ShadowCloakedComponent, SpriteOverlayUpdatedEvent<UnfathomableCurioShieldComponent>>(UpdateOverlay);
 
-        SubscribeLocalEvent<ShadowCloakEntityComponent, ComponentStartup>(OnEntityStartup);
+        UpdatesOutsidePrediction = true;
     }
 
+    public override void Update(float frameTime)
+    {
+        base.Update(frameTime);
+
+        var now = Timing.CurTime;
+
+        if (now < _nextUpdate)
+            return;
+
+        _nextUpdate = now + UpdateDelay;
+
+        // Sync post shaders user -> cloak
+        var query = EntityQueryEnumerator<ShadowCloakEntityComponent, SpriteComponent>();
+        while (query.MoveNext(out var uid, out var cloak, out var sprite))
+        {
+            if (cloak.User is not { } user || !Exists(user) || !_spriteQuery.TryComp(user, out var userSprite))
+                continue;
+
+            foreach (var shader in cloak.ShadersToCopy)
+            {
+                if (!_sprite.TryGetPostShader((user, userSprite), shader, out var entry))
+                {
+                    _sprite.RemovePostShader((uid, sprite), shader);
+                    continue;
+                }
+
+                if (_sprite.HasPostShader((uid, sprite), shader))
+                    continue;
+
+                // Don't raise shader event cause it is already being raised on user and shader instance is the same
+                var args = new SpriteComponent.PostShaderArgs(shader, entry.Shader)
+                {
+                    Before = entry.Before,
+                    After = entry.After,
+                };
+
+                _sprite.SetPostShader((uid, sprite), args);
+            }
+        }
+    }
+
+    [SubscribeLocalEvent]
     private void OnEntityStartup(Entity<ShadowCloakEntityComponent> ent, ref ComponentStartup args)
     {
         if (!Exists(ent.Comp.User))

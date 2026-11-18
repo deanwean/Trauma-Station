@@ -218,6 +218,18 @@
 
 - type: entity
   parent: IDCardStandard
+  id: TramDriverIDCard
+  name: tram driver ID card
+  components:
+  - type: Sprite
+    layers:
+    - state: default
+    - state: idintern-service
+  - type: PresetIdCard
+    job: TramDriver
+
+- type: entity
+  parent: IDCardStandard
   id: CargoIDCard
   name: cargo ID card
   components:
@@ -641,17 +653,18 @@
     iconGroups:
     - CommandIconGroup
     - SecurityIconGroup
-    - ResearchIconGroup
     - CargoIconGroup
     - EngineeringIconGroup
     - MedicalIconGroup
+    - ScienceIconGroup
     - ServiceIconGroup
+    - TheatreIconGroup
     - CivilianIconGroup
-    - EntertainerIconGroup
     - SiliconIconGroup
-    - BlankIconGroup
-    - ThreatIconGroup
     - CentCommIconGroup
+    - AntagonistIconGroup
+    - MiscIconGroup
+    - BlankIconGroup
   - type: UIRequiresLock
   - type: ActivatableUI
     key: enum.AgentIDCardUiKey.Key
@@ -1017,17 +1030,18 @@
     iconGroups:
     - CommandIconGroup
     - SecurityIconGroup
-    - ResearchIconGroup
     - CargoIconGroup
     - EngineeringIconGroup
     - MedicalIconGroup
+    - ScienceIconGroup
     - ServiceIconGroup
+    - TheatreIconGroup
     - CivilianIconGroup
-    - EntertainerIconGroup
     - SiliconIconGroup
-    - BlankIconGroup
-    - ThreatIconGroup
     - CentCommIconGroup
+    - AntagonistIconGroup
+    - MiscIconGroup
+    - BlankIconGroup
     - AdminIconGroup
   - type: ActivatableUI
     key: enum.AgentIDCardUiKey.Key

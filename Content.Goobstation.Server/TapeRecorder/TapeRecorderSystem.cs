@@ -2,11 +2,10 @@
 
 using Content.Server.Chat.Systems;
 using Content.Server.Hands.Systems;
-using Content.Server.Speech;
-using Content.Server.Speech.Components;
 using Content.Shared.Chat;
 using Content.Shared.Paper;
 using Content.Shared.Speech;
+using Content.Shared.Speech.Components;
 using Content.Goobstation.Shared.TapeRecorder;
 using System.Text;
 
@@ -18,12 +17,16 @@ public sealed partial class TapeRecorderSystem : SharedTapeRecorderSystem
     [Dependency] private HandsSystem _hands = default!;
     [Dependency] private PaperSystem _paper = default!;
 
+    private StringBuilder _text = new();
+
     public override void Initialize()
     {
         base.Initialize();
 
-        SubscribeLocalEvent<TapeRecorderComponent, ListenEvent>(OnListen);
-        SubscribeLocalEvent<TapeRecorderComponent, PrintTapeRecorderMessage>(OnPrintMessage);
+        Subs.BuiEvents<TapeRecorderComponent>(TapeRecorderUIKey.Key, subs =>
+        {
+            subs.Event<PrintTapeRecorderMessage>(OnPrintMessage);
+        });
     }
 
     /// <summary>
@@ -54,6 +57,7 @@ public sealed partial class TapeRecorderSystem : SharedTapeRecorderSystem
     /// <summary>
     /// Whenever someone speaks within listening range, record it to tape
     /// </summary>
+    [SubscribeLocalEvent]
     private void OnListen(Entity<TapeRecorderComponent> ent, ref ListenEvent args)
     {
         // mode should never be set when it isn't active but whatever
@@ -91,7 +95,8 @@ public sealed partial class TapeRecorderSystem : SharedTapeRecorderSystem
         if (!TryGetTapeCassette(ent, out var cassette))
             return;
 
-        var text = new StringBuilder();
+        comp.CooldownEndTime = Timing.CurTime + comp.PrintCooldown;
+
         var paper = Spawn(comp.PaperPrototype, Transform(ent).Coordinates);
 
         // Sorting list by time for overwrite order
@@ -109,23 +114,22 @@ public sealed partial class TapeRecorderSystem : SharedTapeRecorderSystem
 
         Audio.PlayPvs(comp.PrintSound, ent);
 
-        text.AppendLine(Loc.GetString("tape-recorder-print-start-text"));
-        text.AppendLine();
+        _text.Clear();
+        _text.AppendLine(Loc.GetString("tape-recorder-print-start-text"));
+        _text.AppendLine();
         foreach (var message in cassette.Comp.RecordedData)
         {
             var name = message.Name ?? ent.Comp.DefaultName;
             var time = TimeSpan.FromSeconds((double) message.Timestamp);
 
-            text.AppendLine(Loc.GetString("tape-recorder-print-message-text",
+            _text.AppendLine(Loc.GetString("tape-recorder-print-message-text",
                 ("time", time.ToString(@"hh\:mm\:ss")),
                 ("source", name),
                 ("message", message.Message)));
         }
-        text.AppendLine();
-        text.Append(Loc.GetString("tape-recorder-print-end-text"));
+        _text.AppendLine();
+        _text.Append(Loc.GetString("tape-recorder-print-end-text"));
 
-        _paper.SetContent((paper, paperComp), text.ToString());
-
-        comp.CooldownEndTime = Timing.CurTime + comp.PrintCooldown;
+        _paper.SetContent((paper, paperComp), _text.ToString());
     }
 }

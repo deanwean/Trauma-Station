@@ -29,8 +29,8 @@
   - WelderIndustrialAdvanced
   - ClothingEyesGlassesMeson
   - ClothingHandsGlovesColorYellow
-  - JawsOfLife
-  - RemoteSignaller
+  - SyndicateJawsOfLife
+  - RemoteSignallerAdvanced
   - Multitool
   - C4
   - C4
@@ -59,7 +59,7 @@
   - RadioJammer
   - TraitorCodePaper
   - Emag
-  - AccessBreaker
+  - SoapSyndie
   - MysteryLighterBox
   - CigPackSyndicate
   - Telecrystal50 # The thief cannot use them, but it may induce communication with traitors
@@ -75,6 +75,8 @@
   - ChemistryBottleNocturine
   - ChemistryBottleNocturine
   - HypopenBox
+  - SyringePistol
+  - Syringe
   - NitrousOxideTankFilled
 
 - type: selectableSet
@@ -89,6 +91,7 @@
   - CyberPen
   - BriefcaseThiefBribingBundleFilled
   - ClothingMaskGasVoiceChameleon
+  - BinaryImplanter
 
 - type: selectableSet
   id: ThiefSmugglerSet
@@ -104,38 +107,6 @@
   - SmokeGrenade
   - SmokeGrenade
   - SmokeGrenade
-
-# ERT
-
-- type: selectableSet
-  id: ERTBallisticsSet
-  name: selectable-set-ert-ballistic-name
-  description: selectable-set-ert-ballistic-description
-  sprite:
-    sprite: _Goobstation/Objects/Weapons/Guns/Rifles/annie.rsi
-    state: base
-  content:
-    - WeaponRifleAnnie
-    - MagazineLightRifle
-    - MagazineLightRifle
-    - MagazineLightRifle
-    - WeaponPistolN1984
-    - MagazineMagnum
-    - MagazineMagnum
-
-- type: selectableSet
-  id: ERTPulseSet
-  name: selectable-set-ert-pulse-name
-  description: selectable-set-ert-pulse-description
-  sprite:
-    sprite: Objects/Weapons/Guns/Battery/pulse_carbine.rsi
-    state: icon
-  content:
-    - WeaponPulseCarbineAdvanced
-    - WeaponEnergyRevolver
-    - EnergySpeedloaderPulse
-    - EnergySpeedloaderPulse
-    - EnergySpeedloaderDisabler
 
 ## voidsuit selectors
 

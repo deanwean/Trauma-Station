@@ -96,7 +96,6 @@
     - type: Tag # Trauma
       tags:
       - TechfabMachineBoard
-      - DroneUsable
 
 - type: entity
   id: AmmoTechFabCircuitboard
@@ -132,7 +131,6 @@
     - type: Tag # Trauma
       tags:
       - TechfabMachineBoard
-      - DroneUsable
 
 - type: entity
   id: CircuitImprinterMachineCircuitboard
@@ -292,6 +290,21 @@
       Manipulator: 2
       Glass: 1
       Steel: 5
+
+- type: entity
+  id: StationTeleporterMachineCircuitboard
+  parent: BaseMachineCircuitboard
+  name: teleporter machine board
+  description: A machine printed circuit board for a bluespace teleporter.
+  components:
+  - type: Sprite
+    state: science
+  - type: MachineBoard
+    prototype: StationTeleporter
+    stackRequirements:
+      Manipulator: 3
+      Cable: 5
+      PlasmaGlass: 10
 
 - type: entity
   parent: BaseMachineCircuitboard
@@ -677,7 +690,6 @@
       price: 15
     - type: Tag # Goobstation - augment construction
       tags:
-      - DroneUsable
       - AugmentRechargerBoard
       - RechargingBoard # Trauma
 
@@ -728,7 +740,6 @@
       price: 15
     - type: Tag # Goobstation - augment construction
       tags:
-      - DroneUsable
       - AugmentStationBoard
       - RechargingBoard # Trauma
 
@@ -754,7 +765,6 @@
       price: 15
     - type: Tag # Trauma
       tags:
-      - DroneUsable
       - AugmentStationBoard
       - RechargingBoard
 
@@ -779,7 +789,6 @@
       Gold: 25
   - type: Tag # Trauma
     tags:
-    - DroneUsable
     - AugmentStationBoard
     - RechargingBoard
 
@@ -1078,7 +1087,6 @@
         Cable: 2
     - type: Tag
       tags:
-      - DroneUsable # Goobstation
       - MicrowaveMachineBoard
 
 - type: entity

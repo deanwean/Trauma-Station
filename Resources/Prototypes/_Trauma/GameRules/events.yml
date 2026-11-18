@@ -11,34 +11,33 @@
     - id: FloorGoblinMidRound
     - id: ClownGoblinMigration
     - id: RadiationStormRule
+    - id: GiantMushroomSpawnHorde
 
 - type: entityTable
   id: BasicAntagEventsTrauma
   table: !type:AllSelector
     children:
-    - id: CarpMigrationRule
+    #- id: CarpMigrationRule
     # TOOD: remove these if they fucking suck lmao
     - id: SingulothKnightsMidround
     - id: MimeAssassinMidround
     - id: VoxRaidersMidround
     - id: TunnelClownMidround
-    - id: WraithMidround # Unchuddified version | no evolution | no absorbing corpses
+    - id: LoneAbductorSpawn
     - id: ParadoxCloneSpawn
     - id: MorphMidroundRule
-    - id: LoneXenomorphSpawnRule
 
 - type: entityTable
   id: ModerateAntagEventsTrauma
   table: !type:AllSelector
     children:
-    #- id: BlobMidround # Disabled until its major bugs are fixed
+    - id: BlobMidround
     - id: DuoAbductorSpawn
     - id: BingleSpawn
     - id: XenomorphsInfestation
-    #- id: SlasherSpawn # TODO: when slasher is ready
     - id: ColossusSpawn
     - id: FugitiveSpawn
-
+    - id: WraithMidround
 
 - type: entity
   parent: BaseGameRule
@@ -269,6 +268,23 @@
       - id: MobSpiderCrabSea
 
 - type: entity
+  parent: BaseStationEventShortDelay
+  id: GiantMushroomSpawnHorde
+  components:
+  - type: StationEvent
+    startAnnouncement: giant-mushroom-spawn-event
+    startAudio:
+      path: /Audio/Announcements/attention.ogg
+    earliestStart: 10
+    minimumPlayers: 15
+    weight: 3
+    duration: 5
+    maxDuration: 20
+  - type: VentHordeRule
+    table:
+      id: MomMushroom
+
+- type: entity
   parent: BaseAntagGhostRoleRule
   id: FugitiveSpawn
   components:
@@ -316,7 +332,7 @@
   - type: LoadMapRule
     gridPath: /Maps/_Trauma/Shuttles/SyndiePolShuttle.yml
   - type: AntagSelection
-    agentName: ghost-role-information-syndicate-hunter-name
+    agentName: ghost-role-information-fugitive-hunter-name
     antags:
     - !type:FixedAntagCount
       proto: FugitiveHunterSyndicate
@@ -339,7 +355,7 @@
   - type: LoadMapRule
     gridPath: /Maps/_Trauma/Shuttles/SpacePolShuttle.yml
   - type: AntagSelection
-    agentName: ghost-role-information-spacepol-hunter-name
+    agentName: ghost-role-information-fugitive-hunter-name
     antags:
     - !type:FixedAntagCount
       proto: FugitiveHunterSpacepol
@@ -362,7 +378,7 @@
   - type: LoadMapRule
     gridPath: /Maps/_Trauma/Shuttles/RussianHunterShuttle.yml
   - type: AntagSelection
-    agentName: ghost-role-information-russian-hunter-name
+    agentName: ghost-role-information-fugitive-hunter-name
     antags:
     - !type:FixedAntagCount
       proto: FugitiveHunterRussian
@@ -385,7 +401,7 @@
   - type: LoadMapRule
     gridPath: /Maps/_Trauma/Shuttles/MercHunterShuttle.yml
   - type: AntagSelection
-    agentName: ghost-role-information-bounty-hunter-name
+    agentName: ghost-role-information-fugitive-hunter-name
     antags:
     - !type:FixedAntagCount
       proto: FugitiveHunterBounty

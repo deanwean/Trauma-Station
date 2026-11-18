@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using Content.Server.Objectives.Commands;
 using Content.Shared.CCVar;
+using Content.Shared.GameTicking;
 //using Content.Shared.Prototypes; // Trauma - die
 using Content.Shared.Roles.Jobs;
 using Robust.Server.Player;
@@ -43,8 +44,6 @@ public sealed partial class ObjectivesSystem : SharedObjectivesSystem
         base.Initialize();
         _objName = Factory.CompName<ObjectiveComponent>(); // Trauma
 
-        SubscribeLocalEvent<RoundEndTextAppendEvent>(OnRoundEndText);
-
         Subs.CVar(_cfg, CCVars.GameShowGreentext, value => _showGreentext = value, true);
 
         ProtoMan.PrototypesReloaded += CreateCompletions;
@@ -60,7 +59,8 @@ public sealed partial class ObjectivesSystem : SharedObjectivesSystem
     /// <summary>
     /// Adds objective text for each game rule's players on round end.
     /// </summary>
-    private void OnRoundEndText(RoundEndTextAppendEvent ev)
+    [SubscribeLocalEvent]
+    private void OnRoundEndText(ref RoundEndTextAppendEvent ev)
     {
         // go through each gamerule getting data for the roundend summary.
         var summaries = new Dictionary<string, Dictionary<string, List<(EntityUid, string)>>>();
@@ -153,8 +153,8 @@ public sealed partial class ObjectivesSystem : SharedObjectivesSystem
             agentSummary.AppendLine(Loc.GetString("objectives-with-objectives", ("custody", custody), ("title", title), ("agent", agent)));
 
             // <Trauma>
-            var ev = new PrependObjectivesSummaryTextEvent();
-            RaiseLocalEvent(mindId, ref ev);
+            var ev = new PrependObjectivesSummaryTextEvent(mindId, name);
+            RaiseLocalEvent(mindId, ref ev, true);
             if (ev.Text != string.Empty)
                 agentSummary.AppendLine(ev.Text);
             // </Trauma>

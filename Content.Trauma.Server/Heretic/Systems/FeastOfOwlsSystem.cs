@@ -1,15 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-using Content.Server.Antag;
 using Content.Server.Chat.Systems;
 using Content.Server.Jittering;
-using Content.Server.Popups;
-using Content.Server.Speech.EntitySystems;
-using Content.Server.Stunnable;
+using Content.Shared.Antag;
 using Content.Shared.FixedPoint;
 using Content.Shared.Mind.Components;
 using Content.Shared.Popups;
 using Content.Shared.Speech.Components;
+using Content.Shared.Speech.EntitySystems;
 using Content.Shared.StatusEffectNew;
 using Content.Shared.Stunnable;
 using Content.Shared.Tag;
@@ -17,6 +15,7 @@ using Content.Trauma.Shared.Heretic.Components;
 using Content.Trauma.Shared.Heretic.Messages;
 using Content.Trauma.Shared.Heretic.Rituals;
 using Content.Trauma.Shared.Heretic.Systems;
+using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Timing;
 
@@ -29,24 +28,21 @@ public sealed partial class FeastOfOwlsSystem : EntitySystem
     [Dependency] private AntagSelectionSystem _antag = default!;
     [Dependency] private JitteringSystem _jitter = default!;
     [Dependency] private StutteringSystem _stutter = default!;
-    [Dependency] private StunSystem _stun = default!;
+    [Dependency] private SharedStunSystem _stun = default!;
     [Dependency] private ChatSystem _chat = default!;
     [Dependency] private SharedAudioSystem _audio = default!;
     [Dependency] private HereticSystem _heretic = default!;
-    [Dependency] private PopupSystem _popup = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
     [Dependency] private HereticRitualSystem _ritual = default!;
     [Dependency] private EntityQuery<VocalComponent> _vocalQuery = default!;
 
     private readonly ProtoId<TagPrototype> _feastOfOwlsTag = "RitualFeastOfOwls";
     private readonly ProtoId<TagPrototype> _ascensionTag = "RitualAscension";
 
-    public override void Initialize()
-    {
-        base.Initialize();
+    private static readonly SoundSpecifier BriefingSoundIntense =
+        new SoundPathSpecifier("/Audio/_Goobstation/Heretic/Ambience/Antag/Heretic/heretic_gain_intense.ogg");
 
-        SubscribeLocalEvent<HereticRitualRuneComponent, FeastOfOwlsMessage>(OnMessage);
-    }
-
+    [SubscribeLocalEvent]
     private void OnMessage(Entity<HereticRitualRuneComponent> ent, ref FeastOfOwlsMessage args)
     {
         if (!args.Accepted)
@@ -79,7 +75,7 @@ public sealed partial class FeastOfOwlsSystem : EntitySystem
         _antag.SendBriefing(user,
             Loc.GetString("feast-of-owls-briefing"),
             Color.Red,
-            HereticRuleSystem.BriefingSoundIntense);
+            BriefingSoundIntense);
 
         EnsureComp<FeastOfOwlsComponent>(user);
     }
@@ -106,11 +102,7 @@ public sealed partial class FeastOfOwlsSystem : EntitySystem
 
             if (comp.CurrentStep + 1 < comp.Reward && !_stun.TryUpdateParalyzeDuration(uid, comp.ParalyzeTime))
             {
-                var dict = new Dictionary<string, FixedPoint2>()
-                {
-                    {SharedHereticSystem.Currency, comp.Reward - comp.CurrentStep}
-                };
-                _heretic.UpdateKnowledge(uid, dict, false, false, mindContainer);
+                _heretic.UpdateKnowledge(uid, new() { { SharedHereticSystem.Currency, comp.Reward - comp.CurrentStep } }, false, false, mindContainer);
                 RemCompDeferred(uid, comp);
                 continue;
             }

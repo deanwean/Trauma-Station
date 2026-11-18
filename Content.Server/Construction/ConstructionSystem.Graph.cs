@@ -324,7 +324,7 @@ namespace Content.Server.Construction
             Resolve(uid, ref containerManager, false);
 
             // We create the new entity.
-            var newUid = EntityManager.CreateEntityUninitialized(newEntity, transform.Coordinates);
+            var newUid = EntityManager.CreateEntityUninitialized(newEntity, transform.Coordinates, rotation: transform.LocalRotation);
 
             // Construction transferring.
             var newConstruction = EnsureComp<ConstructionComponent>(newUid);
@@ -366,9 +366,13 @@ namespace Content.Server.Construction
 
             // Transform transferring.
             var newTransform = Transform(newUid);
-            TransformSystem.AttachToGridOrMap(newUid, newTransform); // in case in hands or a container
-            newTransform.LocalRotation = transform.LocalRotation;
-            newTransform.Anchored = transform.Anchored;
+
+            TransformSystem.SetLocalRotationNoLerp(newUid, transform.LocalRotation);
+
+            // Prefer anchoring directly. If anchoring fails, attach to the grid or map only as a fallback.
+            // This avoids doing AttachToGridOrMap followed by TryAnchor, which can raise two transform updates.
+            if (!transform.Anchored || !TransformSystem.AnchorEntity((newUid, newTransform, null)))
+                TransformSystem.AttachToGridOrMap(newUid, newTransform);
 
             // Container transferring.
             if (containerManager != null)

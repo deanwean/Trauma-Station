@@ -33,17 +33,17 @@ public sealed partial class EyesSystem : EntitySystem
     {
         if (args.NewIntegrity <= 0 ||
             _body.GetBody(ent.Owner) is not {} body ||
-            !TryComp<InternalOrganComponent>(ent, out var organ) ||
+            !TryComp<InternalChildOrganComponent>(ent, out var organ) ||
             !TryComp<BlindableComponent>(body, out var blindable) ||
             organ.OrganIntegrity <= 0) // eyes should be disabled for blinding
             return;
 
-        _blindable.SetEyeDamage((body, blindable), (int) organ.OrganIntegrity);
+        _blindable.SetEyeDamage((body, blindable), (int) (organ.IntegrityCap - organ.OrganIntegrity));
     }
 
     private void OnOrganEnabled(Entity<EyesComponent> ent, ref OrganEnabledEvent args)
     {
-        if (!TryComp<InternalOrganComponent>(ent, out var organ) ||
+        if (!TryComp<InternalChildOrganComponent>(ent, out var organ) ||
             !TryComp(args.Body, out BlindableComponent? blindable))
             return;
 

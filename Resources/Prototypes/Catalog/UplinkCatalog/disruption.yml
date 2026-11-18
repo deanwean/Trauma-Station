@@ -145,12 +145,17 @@
   cost:
     Telecrystal: 100 # was 20, 5x
   restockTime: 15m
+  discountCategory: null
   # </Trauma>
   categories:
   - UplinkDisruption
   conditions:
   - !type:StoreWhitelistCondition
     blacklist:
+      # <Trauma>
+      components:
+      - SpyRule
+      # </Trauma>
       tags:
       - ContravendUplink # Trauma
       - NukeOpsUplink

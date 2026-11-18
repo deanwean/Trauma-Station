@@ -27,6 +27,7 @@ public sealed partial class OrganChipSystem : EntitySystem
     [Dependency] private SharedHandsSystem _hands = default!;
     [Dependency] private SharedDoAfterSystem _doAfter = default!;
     [Dependency] private SharedPopupSystem _popup = default!;
+    [Dependency] private SharedTransformSystem _transform = default!;
     [Dependency] private EntityQuery<BypassInteractionChecksComponent> _bypassQuery = default!;
     [Dependency] private EntityQuery<OrganChipComponent> _query = default!;
     [Dependency] private EntityQuery<OrganChipContainerComponent> _containerQuery = default!;
@@ -159,14 +160,22 @@ public sealed partial class OrganChipSystem : EntitySystem
         }
 
         var user = args.User;
+        var isSelf = _body.GetBody(ent.Owner) == user;
+        var isAdmin = _bypassQuery.HasComp(user);
         // you remember which skill chip is installing in yourself, for others they are just numbered
-        var known = _body.GetBody(ent.Owner) == user || _bypassQuery.HasComp(user);
+        var known = isSelf || isAdmin;
 
         var i = 0;
         foreach (var chip in ent.Comp.Container.ContainedEntities)
         {
+            var comp = _query.Comp(chip);
             var chipCopy = chip; // amazing language
-            var canRemove = true; // TODO: make it support self unremovable chips
+
+            var canRemove = comp.CanRemove;
+            if (!comp.CanSelfRemove)
+                canRemove &= !isSelf;
+            canRemove |= isAdmin; // aghosts can always remove chips
+
             args.Verbs.Add(new()
             {
                 Text = known ? $"Remove {Name(chip)}" : $"Remove {name} chip {++i}",
@@ -241,7 +250,8 @@ public sealed partial class OrganChipSystem : EntitySystem
 
         var user = args.User;
         _popup.PopupEntity($"You pulled a chip out of the {OrganName(ent)}.", user, user);
-        _hands.TryPickupAnyHand(user, chip);
+        if (!_hands.TryPickupAnyHand(user, chip))
+            _transform.AttachToGridOrMap(chip);
         _adminLog.Add(LogType.Verb, $"{user:user} removed organ chip {chip:chip} from {ent:target}");
     }
 
@@ -326,10 +336,12 @@ public sealed partial class OrganChipSystem : EntitySystem
         if (!_query.TryComp(chip, out var comp))
             return null;
 
+        // aghosts don't need to hardgrab (they can't)
+        var isAdmin = _bypassQuery.HasComp(user);
         if (_body.GetBody(organ) is { } body)
         {
             bodyEnt = body;
-            if (body != user && _pullableQuery.TryComp(body, out var pullable) && pullable.GrabStage < GrabStage.Hard)
+            if (body != user && !isAdmin && _pullableQuery.TryComp(body, out var pullable) && pullable.GrabStage < GrabStage.Hard)
             {
                 _popup.PopupEntity("You need to hardgrab them first!", body, user);
                 return null;

@@ -13,7 +13,6 @@ using Content.Shared.Standing;
 using Content.Shared.Stunnable;
 using Content.Shared.Throwing;
 using Content.Shared.Weapons.Melee.Events;
-using Content.Trauma.Common.Contests;
 using Content.Trauma.Common.MartialArts;
 using Robust.Shared.Physics.Events;
 using Robust.Shared.Random;
@@ -34,7 +33,6 @@ public sealed partial class TableSlamSystem : EntitySystem
     [Dependency] private SharedStaminaSystem _stamina = default!;
     [Dependency] private SharedStunSystem _stun = default!;
     [Dependency] private IGameTiming _gameTiming = default!;
-    [Dependency] private CommonContestsSystem _contests = default!;
     [Dependency] private IRobustRandom _random = default!;
     /// <inheritdoc/>
     public override void Initialize()
@@ -82,8 +80,7 @@ public sealed partial class TableSlamSystem : EntitySystem
         if (!HasComp<BonkableComponent>(target)) // checks if its a table.
             return;
 
-        var massContest = _contests.MassContest(ent, ent.Comp.Pulling.Value);
-        var attemptChance = Math.Clamp(0.5f * massContest, 0f, 1f);
+        var attemptChance = Math.Clamp(0.5f, 0f, 1f);
         var attemptRoundedToNearestQuarter = Math.Round(attemptChance * 4, MidpointRounding.ToEven) / 4;
         if(_random.Prob((float) attemptRoundedToNearestQuarter)) // base chance to table slam someone is 1 if your mass ratio is less than 1 then your going to have a harder time slamming somebody.
             TryTableSlam((ent.Comp.Pulling.Value, pullableComponent), ent, target);
@@ -110,11 +107,16 @@ public sealed partial class TableSlamSystem : EntitySystem
         if (!HasComp<BonkableComponent>(args.OtherEntity))
             return;
 
+        TableSlam(ent, args.OtherEntity);
+    }
+
+    public void TableSlam(Entity<PullableComponent> ent, EntityUid table)
+    {
         var modifierOnGlassBreak = 1;
-        if (TryComp<GlassTableComponent>(args.OtherEntity, out var glassTableComponent))
+        if (TryComp<GlassTableComponent>(table, out var glassTableComponent))
         {
-            _damageable.TryChangeDamage(args.OtherEntity, glassTableComponent.TableDamage, origin: ent, targetPart: TargetBodyPart.Chest);
-            _damageable.TryChangeDamage(args.OtherEntity, glassTableComponent.ClimberDamage, origin: ent);
+            _damageable.TryChangeDamage(ent.Owner, glassTableComponent.ClimberDamage, origin: ent, targetPart: TargetBodyPart.Chest);
+            _damageable.TryChangeDamage(table, glassTableComponent.TableDamage, origin: ent);
             modifierOnGlassBreak = 2;
         }
         else
@@ -125,7 +127,7 @@ public sealed partial class TableSlamSystem : EntitySystem
                     DamageDict = new() { { "Blunt", ent.Comp.TabledDamage } },
                 },
                 targetPart: TargetBodyPart.Chest);
-            _damageable.TryChangeDamage(ent.Owner,
+            _damageable.TryChangeDamage(table,
                 new DamageSpecifier()
                 {
                     DamageDict = new() { { "Blunt", ent.Comp.TabledDamage } },
