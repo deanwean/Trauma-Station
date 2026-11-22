@@ -1,11 +1,11 @@
 meta:
   format: 7
   category: Map
-  engineVersion: 283.0.0
-  forkId: Trauma
-  forkVersion: 2cf5f1a968e2c71130d4468b917030d10e539dac
-  time: 07/26/2026 22:50:14
-  entityCount: 19074
+  engineVersion: 284.0.0
+  forkId: ""
+  forkVersion: ""
+  time: 07/30/2026 17:00:15
+  entityCount: 19075
 maps:
 - 1
 grids:
@@ -424,18 +424,18 @@ entities:
           - -9,5
           - -7,9
           - -6,22
-          - -6,12
           - -6,23
+          - -6,12
           - -2,17
           - -2,17
-          - -1,-16
           - -1,-18
-          - -1,17
-          - -1,17
           - -1,-21
+          - -1,17
+          - -1,17
+          - -1,-16
           - 0,17
-          - 0,-21
           - 0,-16
+          - 0,-21
           - 0,17
           - 0,-18
           - 1,-21
@@ -447,35 +447,35 @@ entities:
           - 16,-10
           - 17,22
           - 18,-22
-          - 19,17
-          - 19,17
           - 19,16
+          - 19,16
+          - 19,17
+          - 19,17
           - 19,18
-          - 19,16
           - 20,-19
           - 20,-23
           - 21,16
-          - 21,-19
           - 21,-23
-          - 22,-22
-          - 22,-19
-          - 22,-12
+          - 21,-19
           - 22,-21
+          - 22,-19
+          - 22,-22
           - 22,-23
+          - 22,-12
           - 23,16
           - 24,-19
           - 26,-19
-          - 36,-5
           - 36,-6
-          - 36,6
+          - 36,-5
           - 36,16
+          - 36,6
+          - 39,7
+          - 39,6
           - 39,9
           - 39,8
-          - 39,6
-          - 39,7
           - 44,0
-          - 44,-2
           - 44,-1
+          - 44,-2
           - 46,11
           - 46,-1
           - 52,9
@@ -583,8 +583,8 @@ entities:
           - 49,5
           - 50,5
           - 59,5
-          - 59,-3
           - 59,-6
+          - 59,-3
           - 60,-6
           - 60,5
           - 61,-3
@@ -609,8 +609,8 @@ entities:
           - 48,-5
           - 49,4
           - 50,-5
-          - 59,6
           - 59,3
+          - 59,6
           - 59,-5
           - 60,-5
           - 60,6
@@ -628,21 +628,21 @@ entities:
             id: BrickTileWhiteLineW
             color: '#334E6DC8'
           decals:
-          - 37,8
-          - 37,6
           - 37,9
           - 37,7
-          - 50,1
-          - 50,3
+          - 37,6
+          - 37,8
           - 50,2
+          - 50,3
+          - 50,1
           - 50,-1
-          - 50,-3
           - 50,-2
+          - 50,-3
           - 58,-4
           - 58,4
-          - 62,1
-          - 62,-2
           - 62,0
+          - 62,-2
+          - 62,1
           - 62,-1
           - 62,2
         - node:
@@ -681,21 +681,21 @@ entities:
           - -2,23
           - -1,-22
           - 0,-22
-          - 1,-22
-          - 1,-18
           - 1,-16
+          - 1,-18
+          - 1,-22
           - 4,26
           - 5,26
           - 6,26
-          - 7,-22
-          - 7,-24
           - 7,-23
-          - 10,-5
-          - 10,-4
+          - 7,-24
+          - 7,-22
           - 10,-6
+          - 10,-4
+          - 10,-5
           - 10,6
-          - 10,5
           - 10,4
+          - 10,5
           - 18,-23
           - 19,19
           - 19,-23
@@ -703,12 +703,12 @@ entities:
           - 23,18
           - 24,11
           - 24,10
+          - 31,-5
+          - 31,5
           - 31,-4
           - 31,6
           - 31,-6
           - 31,4
-          - 31,-5
-          - 31,5
           - 32,17
           - 32,-17
           - 33,17
@@ -915,17 +915,17 @@ entities:
           - 28,-6
           - 29,-6
           - 30,-6
-          - 32,-6
-          - 32,-7
-          - 32,-8
-          - 32,-9
-          - 32,-10
-          - 32,-11
-          - 32,-22
-          - 32,-21
-          - 32,-20
-          - 32,-19
           - 32,-18
+          - 32,-20
+          - 32,-21
+          - 32,-22
+          - 32,-11
+          - 32,-10
+          - 32,-9
+          - 32,-8
+          - 32,-7
+          - 32,-19
+          - 32,-6
         - node:
             id: QuarterTileOverlayGreyscale90
             color: '#334E6DC8'
@@ -947,11 +947,11 @@ entities:
             color: '#96DAFF93'
           decals:
           - 34,-18
-          - 34,26
-          - 34,25
-          - 34,22
-          - 34,23
           - 34,24
+          - 34,23
+          - 34,22
+          - 34,25
+          - 34,26
           - 35,-18
           - 35,22
           - 36,-18
@@ -1038,8 +1038,8 @@ entities:
           - 28,11
           - 28,12
           - 28,10
-          - 34,17
           - 34,8
+          - 34,17
           - 34,-8
           - 34,-17
           - 42,-5
@@ -1106,12 +1106,12 @@ entities:
           - -20,4
           - -19,4
           - -12,2
-          - -11,21
           - -11,2
-          - -10,2
+          - -11,21
           - -10,21
-          - -9,21
+          - -10,2
           - -9,2
+          - -9,21
           - -8,2
           - -7,2
           - 2,-24
@@ -1129,8 +1129,8 @@ entities:
           - 19,-13
           - 19,-7
           - 20,-7
-          - 20,-13
           - 20,-22
+          - 20,-13
           - 23,21
           - 24,21
           - 24,10
@@ -1143,9 +1143,9 @@ entities:
           - 38,-21
           - 40,-21
           - 42,-21
-          - 46,-10
-          - 46,-5
           - 46,-21
+          - 46,-5
+          - 46,-10
           - 48,-21
           - 50,-21
         - node:
@@ -1153,34 +1153,34 @@ entities:
             color: '#FFFFFFFF'
           decals:
           - -18,-1
-          - -18,-3
+          - -18,-2
           - -18,3
           - -18,2
           - -18,1
           - -18,0
-          - -18,-2
+          - -18,-3
           - -14,-1
           - -14,0
           - -14,1
-          - -11,-9
           - -11,-8
           - -11,-7
+          - -11,-9
           - -2,25
+          - 1,13
           - 1,15
           - 1,14
-          - 1,13
           - 13,7
           - 19,-21
           - 25,18
-          - 32,17
           - 32,8
-          - 32,-17
+          - 32,17
           - 32,-8
-          - 45,9
-          - 45,10
+          - 32,-17
           - 45,11
-          - 45,-9
           - 45,12
+          - 45,9
+          - 45,-9
+          - 45,10
         - node:
             id: WoodTrimThinInnerNw
             color: '#FFFFFFFF'
@@ -1245,11 +1245,11 @@ entities:
           - -5,25
           - -5,24
           - -5,23
-          - -4,24
-          - -4,22
-          - -4,26
-          - -4,25
           - -4,23
+          - -4,25
+          - -4,26
+          - -4,22
+          - -4,24
           - -3,24
           - -3,23
           - -3,25
@@ -1332,11 +1332,11 @@ entities:
           - 10,6
           - 18,-13
           - 18,-7
-          - 19,-7
           - 19,-13
-          - 20,-7
-          - 20,-20
+          - 19,-7
           - 20,-13
+          - 20,-20
+          - 20,-7
           - 21,15
           - 22,15
           - 23,15
@@ -1734,23 +1734,23 @@ entities:
           - 3,23
           - 3,21
           - 3,24
-          - 4,21
-          - 4,22
-          - 4,25
-          - 4,23
           - 4,26
+          - 4,23
           - 4,24
+          - 4,22
+          - 4,21
+          - 4,25
           - 5,26
           - 5,24
           - 5,25
           - 5,23
           - 5,21
           - 5,22
+          - 6,22
           - 6,21
           - 6,26
           - 6,25
           - 6,23
-          - 6,22
           - 6,24
         - node:
             id: Bot
@@ -2840,14 +2840,14 @@ entities:
             color: '#96DAFF93'
           decals:
           - 32,24
-          - 32,23
-          - 32,22
-          - 32,21
-          - 32,20
-          - 32,19
-          - 32,25
           - 32,18
+          - 32,25
+          - 32,19
           - 32,26
+          - 32,21
+          - 32,22
+          - 32,23
+          - 32,20
           - 42,22
           - 43,22
           - 49,22
@@ -4213,28 +4213,28 @@ entities:
             color: '#FFFFFFFF'
           decals:
           - -19,0
-          - -12,7
-          - -12,9
-          - -12,3
           - -12,5
-          - -11,5
+          - -12,3
+          - -12,9
+          - -12,7
           - -11,3
-          - -10,3
+          - -11,5
           - -10,5
-          - -9,3
-          - -9,7
-          - -9,9
+          - -10,3
           - -9,5
-          - -8,0
+          - -9,9
+          - -9,7
+          - -9,3
           - -8,1
+          - -8,0
           - -8,-1
           - -7,-14
           - -7,5
           - -7,-16
-          - -3,-15
           - -3,-14
           - -3,-13
           - -3,-12
+          - -3,-15
           - -1,-8
           - -1,8
           - 0,8
@@ -4243,11 +4243,11 @@ entities:
           - 1,-8
           - 8,1
           - 8,0
-          - 8,-12
-          - 8,-14
           - 8,-1
-          - 12,-14
+          - 8,-14
+          - 8,-12
           - 12,-12
+          - 12,-14
           - 13,-7
           - 15,7
           - 16,7
@@ -4557,17 +4557,17 @@ entities:
           - -1,-18
           - -1,-19
           - -1,-20
-          - 3,-11
-          - 3,-10
-          - 3,-20
-          - 3,-12
-          - 3,-9
-          - 3,-14
-          - 3,-15
-          - 3,-16
-          - 3,-17
-          - 3,-18
           - 3,-19
+          - 3,-18
+          - 3,-17
+          - 3,-16
+          - 3,-15
+          - 3,-14
+          - 3,-9
+          - 3,-12
+          - 3,-20
+          - 3,-10
+          - 3,-11
           - 9,-9
           - 9,-6
           - 9,-5
@@ -4725,18 +4725,18 @@ entities:
             color: '#FFFFFFFF'
           decals:
           - -12,8
-          - -6,18
           - -6,17
-          - -5,17
+          - -6,18
           - -5,18
-          - -4,18
+          - -5,17
           - -4,17
+          - -4,18
           - 3,19
           - 3,20
-          - 6,15
-          - 6,20
-          - 6,19
           - 6,16
+          - 6,19
+          - 6,20
+          - 6,15
           - 7,13
           - 9,-14
           - 9,-12
@@ -4861,17 +4861,17 @@ entities:
           - 9,-19
           - 10,-19
           - 11,-19
-          - 14,-12
           - 14,-8
           - 14,-4
+          - 14,-12
           - 15,-12
           - 15,-4
           - 16,-4
           - 16,-12
           - 17,-4
           - 17,-12
-          - 18,-8
           - 18,-4
+          - 18,-8
           - 18,-12
         - node:
             id: BrickTileWhiteLineS
@@ -5025,10 +5025,10 @@ entities:
           - 2,5
           - 3,5
           - 4,5
+          - 5,5
+          - 5,4
           - 5,3
           - 5,2
-          - 5,4
-          - 5,5
           - 6,1
           - 6,2
           - 7,1
@@ -5389,23 +5389,23 @@ entities:
           - 1,-17
           - 1,-16
           - 1,-15
-          - 6,-11
-          - 6,-10
-          - 6,-19
-          - 6,-20
-          - 6,-12
-          - 6,-15
-          - 6,-16
-          - 6,-17
-          - 6,-18
           - 6,-14
+          - 6,-18
+          - 6,-17
+          - 6,-16
+          - 6,-15
+          - 6,-20
+          - 6,-19
+          - 6,-10
+          - 6,-11
+          - 6,-12
+          - 11,-5
           - 11,-7
           - 11,-8
           - 11,-4
           - 11,-6
           - 11,-3
           - 11,-9
-          - 11,-5
           - 12,-16
         - node:
             id: LoadingArea
@@ -5428,9 +5428,9 @@ entities:
           - 5,-5
           - 5,-4
           - 5,-3
+          - 6,-1
           - 6,-9
           - 6,-2
-          - 6,-1
           - 7,-1
           - 9,-1
           - 10,-1
@@ -9073,7 +9073,7 @@ entities:
       pos: 17.5,4.5
     - type: Door
       state: Opening
-      secondsUntilStateChange: -156695.3
+      secondsUntilStateChange: -156803.67
     - type: DeviceLinkSource
       lastSignals:
         DoorStatus: True
@@ -9302,7 +9302,7 @@ entities:
       pos: -11.5,-11.5
     - type: Door
       state: Opening
-      secondsUntilStateChange: -195168.72
+      secondsUntilStateChange: -195277.1
     - type: DeviceLinkSource
       lastSignals:
         DoorStatus: True
@@ -9347,7 +9347,7 @@ entities:
       pos: -20.5,7.5
     - type: Door
       state: Opening
-      secondsUntilStateChange: -287606.16
+      secondsUntilStateChange: -287714.53
     - type: DeviceLinkSource
       lastSignals:
         DoorStatus: True
@@ -9434,7 +9434,7 @@ entities:
       invokeCounter: 1
     - type: Door
       state: Opening
-      secondsUntilStateChange: -497962.84
+      secondsUntilStateChange: -498071.22
     - type: DeviceLinkSource
       linkedPorts:
         112:
@@ -18431,13 +18431,6 @@ entities:
       - triggersOnce: False
         triggered: False
         trigger: !type:DamageTrigger
-          damage: 100
-        behaviors:
-        - !type:DoActsBehavior
-          acts: Destruction
-      - triggersOnce: False
-        triggered: False
-        trigger: !type:DamageTrigger
           damage: 5
         behaviors:
         - !type:PlaySoundBehavior
@@ -18456,12 +18449,20 @@ entities:
           solution: beaker
         - !type:SpawnEntitiesBehavior
           spawnInContainer: False
+          spawnAfter: 0
           spawn:
             ShardGlass:
               min: 1
               max: 1
           offset: 0.5
           transferForensics: True
+        - !type:DoActsBehavior
+          acts: Destruction
+      - triggersOnce: False
+        triggered: False
+        trigger: !type:DamageTrigger
+          damage: 100
+        behaviors:
         - !type:DoActsBehavior
           acts: Destruction
     - type: EmitSoundOnCollide
@@ -19249,13 +19250,6 @@ entities:
       - triggersOnce: False
         triggered: False
         trigger: !type:DamageTrigger
-          damage: 100
-        behaviors:
-        - !type:DoActsBehavior
-          acts: Destruction
-      - triggersOnce: False
-        triggered: False
-        trigger: !type:DamageTrigger
           damage: 50
         behaviors:
         - !type:DoActsBehavior
@@ -19272,6 +19266,13 @@ entities:
               pitch: 1
               maxDistance: 15
               loop: False
+      - triggersOnce: False
+        triggered: False
+        trigger: !type:DamageTrigger
+          damage: 100
+        behaviors:
+        - !type:DoActsBehavior
+          acts: Destruction
     - type: Physics
       canCollide: False
     - type: EntityStorage
@@ -19294,13 +19295,6 @@ entities:
       - triggersOnce: False
         triggered: False
         trigger: !type:DamageTrigger
-          damage: 100
-        behaviors:
-        - !type:DoActsBehavior
-          acts: Destruction
-      - triggersOnce: False
-        triggered: False
-        trigger: !type:DamageTrigger
           damage: 50
         behaviors:
         - !type:DoActsBehavior
@@ -19317,6 +19311,13 @@ entities:
               pitch: 1
               maxDistance: 15
               loop: False
+      - triggersOnce: False
+        triggered: False
+        trigger: !type:DamageTrigger
+          damage: 100
+        behaviors:
+        - !type:DoActsBehavior
+          acts: Destruction
     - type: Physics
       canCollide: False
     - type: EntityStorage
@@ -19339,13 +19340,6 @@ entities:
       - triggersOnce: False
         triggered: False
         trigger: !type:DamageTrigger
-          damage: 100
-        behaviors:
-        - !type:DoActsBehavior
-          acts: Destruction
-      - triggersOnce: False
-        triggered: False
-        trigger: !type:DamageTrigger
           damage: 50
         behaviors:
         - !type:DoActsBehavior
@@ -19362,6 +19356,13 @@ entities:
               pitch: 1
               maxDistance: 15
               loop: False
+      - triggersOnce: False
+        triggered: False
+        trigger: !type:DamageTrigger
+          damage: 100
+        behaviors:
+        - !type:DoActsBehavior
+          acts: Destruction
     - type: Physics
       canCollide: False
     - type: EntityStorage
@@ -19384,13 +19385,6 @@ entities:
       - triggersOnce: False
         triggered: False
         trigger: !type:DamageTrigger
-          damage: 100
-        behaviors:
-        - !type:DoActsBehavior
-          acts: Destruction
-      - triggersOnce: False
-        triggered: False
-        trigger: !type:DamageTrigger
           damage: 50
         behaviors:
         - !type:DoActsBehavior
@@ -19407,6 +19401,13 @@ entities:
               pitch: 1
               maxDistance: 15
               loop: False
+      - triggersOnce: False
+        triggered: False
+        trigger: !type:DamageTrigger
+          damage: 100
+        behaviors:
+        - !type:DoActsBehavior
+          acts: Destruction
     - type: Physics
       canCollide: False
     - type: EntityStorage
@@ -55374,13 +55375,6 @@ entities:
       - triggersOnce: False
         triggered: False
         trigger: !type:DamageTrigger
-          damage: 100
-        behaviors:
-        - !type:DoActsBehavior
-          acts: Destruction
-      - triggersOnce: False
-        triggered: False
-        trigger: !type:DamageTrigger
           damage: 5
         behaviors:
         - !type:PlaySoundBehavior
@@ -55399,12 +55393,20 @@ entities:
           solution: null
         - !type:SpawnEntitiesBehavior
           spawnInContainer: False
+          spawnAfter: 0
           spawn:
             ShardGlass:
               min: 0
               max: 1
           offset: 0.5
           transferForensics: True
+        - !type:DoActsBehavior
+          acts: Destruction
+      - triggersOnce: False
+        triggered: False
+        trigger: !type:DamageTrigger
+          damage: 100
+        behaviors:
         - !type:DoActsBehavior
           acts: Destruction
     - type: EmitSoundOnCollide
@@ -59431,6 +59433,13 @@ entities:
     - type: Transform
       parent: 2
       pos: 30.5,2.5
+- proto: CrateJanitorialSupplies
+  entities:
+  - uid: 3953
+    components:
+    - type: Transform
+      parent: 2
+      pos: 36.5,-8.5
 - proto: CrateMedicalSurgery
   entities:
   - uid: 3952
@@ -59450,13 +59459,6 @@ entities:
     - type: Transform
       parent: 2
       pos: 22.5,-20.5
-- proto: CrateServiceJanitorialSupplies
-  entities:
-  - uid: 3953
-    components:
-    - type: Transform
-      parent: 2
-      pos: 36.5,-8.5
 - proto: CrateSurgery
   entities:
   - uid: 167
@@ -59490,6 +59492,13 @@ entities:
           ent: null
           showEnts: False
           occludes: True
+- proto: CrateSyndicateCombatSkillChips
+  entities:
+  - uid: 18756
+    components:
+    - type: Transform
+      parent: 10434
+      pos: 4.5,-0.5
 - proto: CrateTrashCart
   entities:
   - uid: 3955
@@ -63233,6 +63242,8 @@ entities:
     components:
     - type: Transform
       parent: 9774
+    - type: GasTank
+      nextDirtyTime: -53.2336515
     - type: MeleeWeapon
       nextAttack: -1894.717604
     - type: UseDelay
@@ -63295,6 +63306,8 @@ entities:
     components:
     - type: Transform
       parent: 10296
+    - type: GasTank
+      nextDirtyTime: -53.2336515
     - type: MeleeWeapon
       nextAttack: -2097.2829684
     - type: UseDelay
@@ -63317,6 +63330,8 @@ entities:
     components:
     - type: Transform
       parent: 10336
+    - type: GasTank
+      nextDirtyTime: -53.2336515
     - type: MeleeWeapon
       nextAttack: -1779.1533564
     - type: UseDelay
@@ -63698,13 +63713,6 @@ entities:
       - triggersOnce: False
         triggered: False
         trigger: !type:DamageTrigger
-          damage: 100
-        behaviors:
-        - !type:DoActsBehavior
-          acts: Destruction
-      - triggersOnce: False
-        triggered: False
-        trigger: !type:DamageTrigger
           damage: 5
         behaviors:
         - !type:PlaySoundBehavior
@@ -63721,6 +63729,13 @@ entities:
               loop: False
         - !type:SpillBehavior
           solution: null
+        - !type:DoActsBehavior
+          acts: Destruction
+      - triggersOnce: False
+        triggered: False
+        trigger: !type:DamageTrigger
+          damage: 100
+        behaviors:
         - !type:DoActsBehavior
           acts: Destruction
     - type: MeleeWeapon
@@ -64026,17 +64041,17 @@ entities:
       - triggersOnce: False
         triggered: False
         trigger: !type:DamageTrigger
-          damage: 100
+          damage: 45
         behaviors:
+        - !type:TriggerBehavior
+          keyOut: timer
         - !type:DoActsBehavior
           acts: Destruction
       - triggersOnce: False
         triggered: False
         trigger: !type:DamageTrigger
-          damage: 45
+          damage: 100
         behaviors:
-        - !type:TriggerBehavior
-          keyOut: timer
         - !type:DoActsBehavior
           acts: Destruction
     - type: EmitSoundOnCollide
@@ -103011,13 +103026,6 @@ entities:
       - triggersOnce: False
         triggered: False
         trigger: !type:DamageTrigger
-          damage: 100
-        behaviors:
-        - !type:DoActsBehavior
-          acts: Destruction
-      - triggersOnce: False
-        triggered: False
-        trigger: !type:DamageTrigger
           damage: 20
         behaviors:
         - !type:PlaySoundBehavior
@@ -103036,12 +103044,20 @@ entities:
           solution: null
         - !type:SpawnEntitiesBehavior
           spawnInContainer: False
+          spawnAfter: 0
           spawn:
             SheetPlastic1:
               min: 0
               max: 1
           offset: 0.5
           transferForensics: True
+        - !type:DoActsBehavior
+          acts: Destruction
+      - triggersOnce: False
+        triggered: False
+        trigger: !type:DamageTrigger
+          damage: 100
+        behaviors:
         - !type:DoActsBehavior
           acts: Destruction
     - type: MeleeWeapon
@@ -103069,13 +103085,6 @@ entities:
       - triggersOnce: False
         triggered: False
         trigger: !type:DamageTrigger
-          damage: 100
-        behaviors:
-        - !type:DoActsBehavior
-          acts: Destruction
-      - triggersOnce: False
-        triggered: False
-        trigger: !type:DamageTrigger
           damage: 20
         behaviors:
         - !type:PlaySoundBehavior
@@ -103094,12 +103103,20 @@ entities:
           solution: null
         - !type:SpawnEntitiesBehavior
           spawnInContainer: False
+          spawnAfter: 0
           spawn:
             SheetPlastic1:
               min: 0
               max: 1
           offset: 0.5
           transferForensics: True
+        - !type:DoActsBehavior
+          acts: Destruction
+      - triggersOnce: False
+        triggered: False
+        trigger: !type:DamageTrigger
+          damage: 100
+        behaviors:
         - !type:DoActsBehavior
           acts: Destruction
     - type: MeleeWeapon
@@ -103127,13 +103144,6 @@ entities:
       - triggersOnce: False
         triggered: False
         trigger: !type:DamageTrigger
-          damage: 100
-        behaviors:
-        - !type:DoActsBehavior
-          acts: Destruction
-      - triggersOnce: False
-        triggered: False
-        trigger: !type:DamageTrigger
           damage: 20
         behaviors:
         - !type:PlaySoundBehavior
@@ -103152,12 +103162,20 @@ entities:
           solution: null
         - !type:SpawnEntitiesBehavior
           spawnInContainer: False
+          spawnAfter: 0
           spawn:
             SheetPlastic1:
               min: 0
               max: 1
           offset: 0.5
           transferForensics: True
+        - !type:DoActsBehavior
+          acts: Destruction
+      - triggersOnce: False
+        triggered: False
+        trigger: !type:DamageTrigger
+          damage: 100
+        behaviors:
         - !type:DoActsBehavior
           acts: Destruction
     - type: MeleeWeapon
@@ -103185,13 +103203,6 @@ entities:
       - triggersOnce: False
         triggered: False
         trigger: !type:DamageTrigger
-          damage: 100
-        behaviors:
-        - !type:DoActsBehavior
-          acts: Destruction
-      - triggersOnce: False
-        triggered: False
-        trigger: !type:DamageTrigger
           damage: 20
         behaviors:
         - !type:PlaySoundBehavior
@@ -103210,12 +103221,20 @@ entities:
           solution: null
         - !type:SpawnEntitiesBehavior
           spawnInContainer: False
+          spawnAfter: 0
           spawn:
             SheetPlastic1:
               min: 0
               max: 1
           offset: 0.5
           transferForensics: True
+        - !type:DoActsBehavior
+          acts: Destruction
+      - triggersOnce: False
+        triggered: False
+        trigger: !type:DamageTrigger
+          damage: 100
+        behaviors:
         - !type:DoActsBehavior
           acts: Destruction
     - type: MeleeWeapon
@@ -111510,20 +111529,23 @@ entities:
     - type: Transform
       parent: 9935
       pos: -3.5,17.5
-- proto: RandomHumanoidHECUSpawner
-  entities:
-  - uid: 19074
-    components:
-    - type: Transform
-      parent: 10434
-      pos: 1.6105957,-2.1454163
-- proto: RandomHumanoidVisitorSecurityOfficer
+- proto: RandomHumanoidSpawnerPMCUnit
   entities:
   - uid: 19069
     components:
     - type: Transform
       parent: 10434
-      pos: 2.2589111,-4.2836304
+      pos: 4.993408,-1.5864258
+  - uid: 19074
+    components:
+    - type: Transform
+      parent: 10434
+      pos: 4.962158,-2.7583008
+  - uid: 19075
+    components:
+    - type: Transform
+      parent: 10434
+      pos: 1.487915,-4.289551
 - proto: RandomInstruments
   entities:
   - uid: 6975
@@ -124577,10 +124599,9 @@ entities:
       - triggersOnce: False
         triggered: False
         trigger: !type:DamageTrigger
-          damage: 100
+          damage: 10
         behaviors:
-        - !type:DoActsBehavior
-          acts: Destruction
+        - !type:TimerStartBehavior {}
       - triggersOnce: False
         triggered: False
         trigger: !type:DamageTrigger
@@ -124593,9 +124614,10 @@ entities:
       - triggersOnce: False
         triggered: False
         trigger: !type:DamageTrigger
-          damage: 10
+          damage: 100
         behaviors:
-        - !type:TimerStartBehavior {}
+        - !type:DoActsBehavior
+          acts: Destruction
     - type: TimerTrigger
       nextTrigger: -2197.4827964
       nextBeep: -2197.4827964
@@ -124687,13 +124709,6 @@ entities:
       - triggersOnce: False
         triggered: False
         trigger: !type:DamageTrigger
-          damage: 100
-        behaviors:
-        - !type:DoActsBehavior
-          acts: Destruction
-      - triggersOnce: False
-        triggered: False
-        trigger: !type:DamageTrigger
           damage: 50
         behaviors:
         - !type:DoActsBehavior
@@ -124712,6 +124727,7 @@ entities:
               loop: False
         - !type:SpawnEntitiesBehavior
           spawnInContainer: False
+          spawnAfter: 0
           spawn:
             SheetSteel:
               min: 1
@@ -124721,6 +124737,13 @@ entities:
               max: 2
           offset: 0.5
           transferForensics: False
+      - triggersOnce: False
+        triggered: False
+        trigger: !type:DamageTrigger
+          damage: 100
+        behaviors:
+        - !type:DoActsBehavior
+          acts: Destruction
     - type: Blocking
       blockingToggleActionEntity: 11039
     - type: EmitSoundOnCollide
