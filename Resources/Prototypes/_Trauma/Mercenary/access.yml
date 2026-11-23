@@ -1,0 +1,121 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+- type: accessLevel
+  id: Mercenary
+  name: id-card-access-level-mercenary
+
+- type: entity
+  parent: DoorElectronics
+  id: DoorElectronicsMercenary
+  suffix: Mercenary, Locked
+  components:
+  - type: AccessReader
+    access: [[ Mercenary ]]
+
+- type: entity
+  parent: Airlock
+  id: AirlockMercenaryLocked
+  suffix: Mercenary, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsMercenary ]
+
+- type: entity
+  parent: AirlockGlass
+  id: AirlockMercenaryGlassLocked
+  suffix: Mercenary, Glass, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsMercenary ]
+
+- type: entity
+  parent: AirlockEngineeringGlass
+  id: AirlockEngineeringMercenaryGlassLocked
+  suffix: Engineering, Mercenary, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsMercenary ]
+
+- type: entity
+  parent: AirlockMedicalGlass
+  id: AirlockMedicalMercenaryGlassLocked
+  suffix: Medical, Mercenary, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsMercenary ]
+
+- type: entity
+  parent: AirlockSecurityGlass
+  id: AirlockSecurityMercenaryGlassLocked
+  suffix: Security, Mercenary, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsMercenary ]
+
+- type: entity
+  parent: AirlockExternal
+  id: AirlockExternalMercenaryLocked
+  suffix: External, Mercenary, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsMercenary ]
+
+- type: entity
+  parent: AirlockExternalGlass
+  id: AirlockExternalMercenaryGlassLocked
+  suffix: External, Glass, Mercenary, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsMercenary ]
+
+- type: entity
+  parent: AirlockShuttle
+  id: AirlockShuttleMercenaryLocked
+  suffix: Shuttle, Mercenary, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsMercenary ]
+
+- type: entity
+  parent: AirlockGlassShuttle
+  id: AirlockShuttleMercenaryGlassLocked
+  suffix: Shuttle, Glass, Mercenary, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsMercenary ]
+
+- type: entity
+  parent: AirlockGlassShuttleSyndicate
+  id: AirlockShuttleMercenaryGlassBeetleLocked
+  suffix: Beetle, Shuttle, Glass, Mercenary, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsMercenary ]
+
+- type: entity
+  parent: WindoorSecure
+  id: WindoorSecureMercenaryLocked
+  suffix: Secure, Mercenary, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsMercenary ]
+
+- type: entity
+  parent: HighSecDoor
+  id: HighSecDoorMercenaryLocked
+  suffix: Mercenary, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsMercenary ]

@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "license": "CC0-1.0",
+    "copyright": "Original mercenary job icon for Trauma Station",
+    "size": {
+        "x": 8,
+        "y": 8
+    },
+    "states": [
+        {
+            "name": "mercenary"
+        }
+    ]
+}

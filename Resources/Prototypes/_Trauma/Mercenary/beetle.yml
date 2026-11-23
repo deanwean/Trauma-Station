@@ -1,0 +1,81 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+- type: npcFaction
+  id: Mercenary
+  hostile:
+  - NanoTrasen
+  - Syndicate
+
+- type: entity
+  parent: BaseWeaponBallisticTurret
+  id: WeaponTurretMercenary
+  name: mercenary ballistic turret
+  description: An automated sentry that recognizes the Beetle's crew. The boarding corridor is a poor place for clients to wait.
+  components:
+  - type: NpcFactionMember
+    factions: [ Mercenary ]
+
+- type: entity
+  parent: GunSafe
+  id: MercenaryTreasury
+  name: mercenary treasury
+  description: A cash vault for the company's earnings.
+  components:
+  - type: MercenaryTreasury
+  - type: AccessReader
+    access: [[ Mercenary ]]
+  - type: Sprite
+    sprite: Structures/Storage/closet.rsi
+    layers:
+    - state: base
+      sprite: _Trauma/Mercenary/treasury.rsi
+      map: [ "enum.StorageVisualLayers.Base" ]
+    - state: closed
+      sprite: _Trauma/Mercenary/treasury.rsi
+      map: [ "enum.StorageVisualLayers.Door" ]
+    - state: locked
+      map: [ "enum.LockVisualLayers.Lock" ]
+      shader: unshaded
+    - state: welded
+      visible: false
+      map: [ "enum.WeldableLayers.BaseWelded" ]
+    - state: paper
+      visible: false
+      sprite: Structures/Storage/closet_labels.rsi
+      offset: "-0.065,0"
+      map: [ "enum.PaperLabelVisuals.Layer" ]
+  - type: EntityStorageVisuals
+    stateBaseClosed: base
+    stateDoorOpen: open
+    stateDoorClosed: closed
+  - !Remove type: Paintable
+
+- type: entity
+  parent: ComputerComms
+  id: MercenaryComputerComms
+  name: mercenary communications computer
+  description: A wideband transmitter for the crew to advertise their services and contact clients.
+  components:
+  - type: AccessReader
+    access: [[ Mercenary ]]
+  - type: CommunicationsConsole
+    title: comms-console-announcement-title-mercenary
+    color: "#57da86"
+    announcementOnly: true
+    global: true
+    announceSentBy: false
+  - type: Computer
+    board: MercenaryCommsComputerCircuitboard
+  - !Remove type: StationReportTarget
+  - !Remove type: StealTarget
+
+- type: entity
+  parent: BaseComputerCircuitboard
+  id: MercenaryCommsComputerCircuitboard
+  name: mercenary communications computer board
+  description: A printed circuit board for a mercenary communications console.
+  components:
+  - type: Sprite
+    state: cpu_command
+  - type: ComputerBoard
+    prototype: MercenaryComputerComms
