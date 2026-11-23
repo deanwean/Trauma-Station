@@ -13,7 +13,8 @@ namespace Content.Shared.Communications
     public sealed class CommunicationsConsoleInterfaceState : BoundUserInterfaceState
     {
         public readonly bool CanAnnounce;
-        public readonly bool CanBroadcast = true;
+        public readonly bool CanBroadcast;
+        public readonly bool AnnouncementOnly; // Trauma
         public readonly bool CanCall;
         public readonly TimeSpan? ExpectedCountdownEnd;
         public readonly bool CountdownStarted;
@@ -21,9 +22,12 @@ namespace Content.Shared.Communications
         public CommunicationsConsoleInterfaceState(
             bool canAnnounce,
             bool canCall,
-            TimeSpan? expectedCountdownEnd = null)
+            TimeSpan? expectedCountdownEnd = null,
+            bool announcementOnly = false) // Trauma
         {
             CanAnnounce = canAnnounce;
+            CanBroadcast = !announcementOnly; // Trauma
+            AnnouncementOnly = announcementOnly; // Trauma
             CanCall = canCall;
             ExpectedCountdownEnd = expectedCountdownEnd;
             CountdownStarted = expectedCountdownEnd != null;

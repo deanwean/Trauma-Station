@@ -54,8 +54,12 @@ public sealed partial class CommunicationsConsoleMenu : FancyWindow
         MessagingControls.CanRadioAnnounce = commsState.CanAnnounce;
         MessagingControls.CanScreenBroadcast = commsState.CanBroadcast;
 
-        var alertLevelSelectable = selectableAlertLevels != null && canChangeAlertLevel;
-        AlertLevelControls.UpdateAlertLevels(selectableAlertLevels, currentAlertLevel, alertLevelSelectable);
+        // <Trauma>
+        AlertLevelControls.Visible = !commsState.AnnouncementOnly && selectableAlertLevels != null;
+        ShuttleControls.Visible = !commsState.AnnouncementOnly;
+        if (AlertLevelControls.Visible)
+            AlertLevelControls.UpdateAlertLevels(selectableAlertLevels, currentAlertLevel, canChangeAlertLevel);
+        // </Trauma>
 
         ShuttleControls.UpdateState(commsState.CanCall, commsState.CountdownStarted, commsState.ExpectedCountdownEnd);
     }
