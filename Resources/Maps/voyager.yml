@@ -5,7 +5,7 @@ meta:
   forkId: ""
   forkVersion: ""
   time: 07/30/2026 17:00:15
-  entityCount: 19075
+  entityCount: 19077
 maps:
 - 1
 grids:
@@ -9311,7 +9311,7 @@ entities:
     - type: Transform
       parent: 2
       pos: 39.5,0.5
-- proto: AirlockEngineeringGlass
+- proto: AirlockEngineeringMercenaryGlassLocked
   entities:
   - uid: 18714
     components:
@@ -9319,10 +9319,6 @@ entities:
       parent: 10434
       rot: 3.141592653589793 rad
       pos: 5.5,0.5
-    - type: AccessReader
-      accessListsOriginal: []
-      access:
-      - - SyndicateAgent
 - proto: AirlockEngineeringGlassLocked
   entities:
   - uid: 106
@@ -9763,8 +9759,22 @@ entities:
     - type: Transform
       parent: 2
       pos: -5.5,-26.5
-- proto: AirlockExternalGlassShuttleSyndicateLocked
+- proto: AirlockShuttleMercenaryGlassBeetleLocked
   entities:
+  - uid: 18902
+    components:
+    - type: Transform
+      parent: 18654
+      pos: 1.5,0.5
+    - type: Door
+      changeAirtight: False
+    - type: Docking
+      dockJointId: docking384824
+      dockedWith: 16570
+    - type: DeviceLinkSource
+      lastSignals:
+        DoorStatus: False
+        DockStatus: True
   - uid: 16557
     components:
     - type: Transform
@@ -9786,20 +9796,6 @@ entities:
     - type: Docking
       dockJointId: docking384824
       dockedWith: 18902
-    - type: DeviceLinkSource
-      lastSignals:
-        DoorStatus: False
-        DockStatus: True
-  - uid: 18902
-    components:
-    - type: Transform
-      parent: 18654
-      pos: 1.5,0.5
-    - type: Door
-      changeAirtight: False
-    - type: Docking
-      dockJointId: docking384824
-      dockedWith: 16570
     - type: DeviceLinkSource
       lastSignals:
         DoorStatus: False
@@ -10066,17 +10062,13 @@ entities:
       parent: 2
       rot: 1.5707963267948966 rad
       pos: 20.5,15.5
-- proto: AirlockMedicalGlass
+- proto: AirlockMedicalMercenaryGlassLocked
   entities:
   - uid: 18653
     components:
     - type: Transform
       parent: 10434
       pos: -0.5,-1.5
-    - type: AccessReader
-      accessListsOriginal: []
-      access:
-      - - SyndicateAgent
   - uid: 18865
     components:
     - type: Transform
@@ -10252,17 +10244,13 @@ entities:
     - type: Transform
       parent: 2
       pos: 2.5,16.5
-- proto: AirlockSecurityGlass
+- proto: AirlockSecurityMercenaryGlassLocked
   entities:
   - uid: 18652
     components:
     - type: Transform
       parent: 10434
       pos: 3.5,-1.5
-    - type: AccessReader
-      accessListsOriginal: []
-      access:
-      - - SyndicateAgent
 - proto: AirlockSecurityGlassLocked
   entities:
   - uid: 196
@@ -102346,17 +102334,13 @@ entities:
     - type: Transform
       parent: 16665
       pos: 5.5,-2.5
-- proto: HighSecDoor
+- proto: HighSecDoorMercenaryLocked
   entities:
   - uid: 16564
     components:
     - type: Transform
       parent: 10434
       pos: 1.5,-8.5
-    - type: AccessReader
-      accessListsOriginal: []
-      access:
-      - - SyndicateAgent
 - proto: HoloFan
   entities:
   - uid: 9784
@@ -111529,6 +111513,20 @@ entities:
     - type: Transform
       parent: 9935
       pos: -3.5,17.5
+- proto: MercenaryComputerComms
+  entities:
+  - uid: 19076
+    components:
+    - type: Transform
+      parent: 10434
+      pos: 2.5,-4.5
+- proto: MercenaryTreasury
+  entities:
+  - uid: 19077
+    components:
+    - type: Transform
+      parent: 10434
+      pos: 4.5,-3.5
 - proto: RandomHumanoidSpawnerPMCUnit
   entities:
   - uid: 19069
@@ -137764,7 +137762,7 @@ entities:
     - type: Transform
       parent: 16665
       pos: 5.5,-6.5
-- proto: WeaponTurretSyndicate
+- proto: WeaponTurretMercenary
   entities:
   - uid: 16569
     components:

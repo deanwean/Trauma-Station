@@ -78,25 +78,26 @@ public sealed partial class CommunicationsConsoleBoundUserInterface(EntityUid ow
     {
         base.UpdateState(state);
 
-        if (state is not CommunicationsConsoleInterfaceState commsState)
+        if (state is not CommunicationsConsoleInterfaceState commsState || _menu == null)
             return;
 
         var stationUid = _station.GetOwningStation(Owner);
 
-        if (!EntMan.TryGetComponent<AlertLevelComponent>(stationUid, out var alertComp))
-            return;
-
-        if (_menu != null)
+        if (commsState.AnnouncementOnly || !EntMan.TryGetComponent<AlertLevelComponent>(stationUid, out var alertComp))
         {
-            // <Trauma>
-            _menu.Station = stationUid.Value;
-            _menu.UpdateUnlock();
-            // </Trauma>
-            var currentAlertLevel = alertComp.CurrentAlertLevel;
-            var selectableAlertLevels = _alertLevel.GetSelectableAlertLevels((stationUid.Value, alertComp));
-            var canChangeAlertLevel = _alertLevel.CanChangeAlertLevel((stationUid.Value, alertComp));
-
-            _menu.UpdateState(commsState, currentAlertLevel, selectableAlertLevels, canChangeAlertLevel);
+            // Off-station consoles still need announcement state and cooldown updates.
+            _menu.UpdateState(commsState, default, null, false);
+            return;
         }
+
+        // <Trauma>
+        _menu.Station = stationUid.Value;
+        _menu.UpdateUnlock();
+        // </Trauma>
+        var currentAlertLevel = alertComp.CurrentAlertLevel;
+        var selectableAlertLevels = _alertLevel.GetSelectableAlertLevels((stationUid.Value, alertComp));
+        var canChangeAlertLevel = _alertLevel.CanChangeAlertLevel((stationUid.Value, alertComp));
+
+        _menu.UpdateState(commsState, currentAlertLevel, selectableAlertLevels, canChangeAlertLevel);
     }
 }
