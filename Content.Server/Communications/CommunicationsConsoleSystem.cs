@@ -140,7 +140,8 @@ namespace Content.Server.Communications
             _uiSystem.SetUiState(uid, CommunicationsConsoleUiKey.Key, new CommunicationsConsoleInterfaceState(
                 CanAnnounce(comp),
                 CanCallOrRecall(comp),
-                _roundEndSystem.ExpectedCountdownEnd
+                comp.AnnouncementOnly ? null : _roundEndSystem.ExpectedCountdownEnd, // Trauma
+                comp.AnnouncementOnly // Trauma
             ));
         }
 
@@ -165,7 +166,7 @@ namespace Content.Server.Communications
                 return false;
 
             // Ensure that we can communicate with the shuttle (either call or recall)
-            if (!comp.CanShuttle)
+            if (!comp.CanShuttle || comp.AnnouncementOnly) // Trauma
                 return false;
 
             // Calling shuttle checks
@@ -185,6 +186,9 @@ namespace Content.Server.Communications
 
         private void OnSelectAlertLevelMessage(EntityUid uid, CommunicationsConsoleComponent comp, CommunicationsConsoleSelectAlertLevelMessage message)
         {
+            if (comp.AnnouncementOnly) // Trauma
+                return;
+
             if (message.Actor is not { Valid: true } mob)
                 return;
 
@@ -262,6 +266,9 @@ namespace Content.Server.Communications
 
         private void OnBroadcastMessage(EntityUid uid, CommunicationsConsoleComponent component, CommunicationsConsoleBroadcastMessage message)
         {
+            if (component.AnnouncementOnly) // Trauma
+                return;
+
             if (message.Actor is { Valid: true } mob && !CanUse(mob, uid))
             {
                 _popupSystem.PopupEntity(Loc.GetString("comms-console-permission-denied"), uid, mob);

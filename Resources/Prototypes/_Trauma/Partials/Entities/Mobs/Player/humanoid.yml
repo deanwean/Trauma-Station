@@ -22,3 +22,16 @@
 - type: randomHumanoidSettings
   parent: EventHumanoid
   id: NukeOp
+
+- type: randomHumanoidSettings
+  id: PMCMercenary
+  components:
+  - type: GhostRole
+    name: ghost-role-information-mercenary-name
+    description: ghost-role-information-mercenary-description
+    rules: ghost-role-information-mercenary-rules
+    mindRoles: [ MindRoleMercenary ]
+  - type: MercenaryBriefing
+    sound: /Audio/_Trauma/Ambience/Antag/mercenary_start.ogg
+  - type: NpcFactionMember
+    factions: [ Mercenary ]

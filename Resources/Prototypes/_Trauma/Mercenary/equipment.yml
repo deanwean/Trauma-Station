@@ -1,0 +1,53 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+- type: jobIcon
+  parent: JobIcon
+  id: JobIconMercenary
+  icon:
+    sprite: /Textures/_Trauma/Mercenary/job_icon.rsi
+    state: mercenary
+  jobName: ghost-role-information-mercenary-name
+  isCrewJob: false
+
+- type: entity
+  parent: IDCardStandard
+  id: MercenaryIDCard
+  name: mercenary ID card
+  description: A crew identification card issued aboard the PMC Cruiser Beetle.
+  components:
+  - type: Sprite
+    layers:
+    - state: icon
+      sprite: _Trauma/Mercenary/id_card.rsi
+  - type: Access
+    tags: [ Mercenary ]
+  - type: IdCard
+    jobIcon: JobIconMercenary
+
+- type: entity
+  parent: BasePDA
+  id: MercenaryPDA
+  name: mercenary PDA
+  description: Standard issue for the crew of the PMC Cruiser Beetle.
+  components:
+  - type: Pda
+    id: MercenaryIDCard
+  - type: Appearance
+    appearanceDataInit:
+      enum.PdaVisuals.PdaType: !type:String pda-mercenary
+  - type: Sprite
+    layers:
+    - state: pda-mercenary
+      sprite: _Trauma/Mercenary/pda.rsi
+      map: [ "enum.PdaVisualLayers.Base" ]
+    - state: light_overlay
+      map: [ "enum.PdaVisualLayers.Flashlight" ]
+      shader: unshaded
+      visible: false
+    - state: id_overlay
+      map: [ "enum.PdaVisualLayers.IdLight" ]
+      shader: unshaded
+      visible: false
+  - type: Icon
+    sprite: _Trauma/Mercenary/pda.rsi
+    state: pda-mercenary
