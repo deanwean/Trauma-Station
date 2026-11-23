@@ -1,0 +1,33 @@
+<Project>
+  <!-- Executables and their content modules share these output folders. The SDK
+       tracks referenced executables' runtime JSON as copied content, even when
+       source and destination are the same file. A module must not clean files
+       that belong to a different executable in the shared folder. -->
+  <PropertyGroup>
+    <_ContentClientOutput>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)', '..', 'bin', 'Content.Client'))</_ContentClientOutput>
+    <_ContentServerOutput>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)', '..', 'bin', 'Content.Server'))</_ContentServerOutput>
+  </PropertyGroup>
+
+  <Target Name="ProtectSharedContentRuntimeFiles"
+          BeforeTargets="CoreClean;_CleanGetCurrentAndPriorFileWrites"
+          Condition="'$(TargetDir)' == '$(_ContentClientOutput)' Or '$(TargetDir)' == '$(_ContentServerOutput)'">
+    <ReadLinesFromFile File="$(IntermediateOutputPath)$(CleanFile)"
+                       Condition="Exists('$(IntermediateOutputPath)$(CleanFile)')">
+      <Output TaskParameter="Lines" ItemName="_SharedOutputPriorWrites" />
+    </ReadLinesFromFile>
+    <ItemGroup>
+      <_OtherProjectRuntimeFiles Include="@(_SharedOutputPriorWrites);@(FileWrites)"
+          Condition="'%(RootDir)%(Directory)' == '$(TargetDir)' And
+                     $([System.Text.RegularExpressions.Regex]::IsMatch('%(Filename)%(Extension)', '\.(deps|runtimeconfig(\.dev)?)\.json$')) And
+                     '%(Filename)' != '$(AssemblyName).deps' And
+                     '%(Filename)' != '$(AssemblyName).runtimeconfig' And
+                     '%(Filename)' != '$(AssemblyName).runtimeconfig.dev'" />
+      <_SharedOutputPriorWrites Remove="@(_OtherProjectRuntimeFiles)" />
+      <FileWrites Remove="@(_OtherProjectRuntimeFiles)" />
+    </ItemGroup>
+    <WriteLinesToFile File="$(IntermediateOutputPath)$(CleanFile)"
+                      Lines="@(_SharedOutputPriorWrites)"
+                      Overwrite="true" WriteOnlyWhenDifferent="true"
+                      Condition="Exists('$(IntermediateOutputPath)$(CleanFile)')" />
+  </Target>
+</Project>

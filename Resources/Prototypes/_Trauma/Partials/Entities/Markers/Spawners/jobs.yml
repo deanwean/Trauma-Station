@@ -1,0 +1,22 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+- type: entity
+  id: SpawnPointERTLeader
+  name: ERT commander spawn point
+  components:
+  - type: JobLateJoinSpawnPoint
+
+- type: entity
+  id: SpawnPointERTMedical
+  components:
+  - type: JobLateJoinSpawnPoint
+
+- type: entity
+  id: SpawnPointERTEngineer
+  components:
+  - type: JobLateJoinSpawnPoint
+
+- type: entity
+  id: SpawnPointERTSecurity
+  components:
+  - type: JobLateJoinSpawnPoint

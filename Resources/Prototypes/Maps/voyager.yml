@@ -26,6 +26,11 @@
             ChiefEngineer: [ 1, 1 ]
             ResearchDirector: [ 1, 1 ]
             Quartermaster: [ 1, 1 ]
+            # Emergency Response Team
+            ERTLeader: [ 1, 1 ]
+            ERTMedical: [ 1, 1 ]
+            ERTEngineer: [ 1, 1 ]
+            ERTSecurity: [ 1, 1 ]
             # Silicon
             StationAi: [ 1, 1 ]
             Borg: [ 2, 2 ]

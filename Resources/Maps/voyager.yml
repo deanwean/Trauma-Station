@@ -4177,6 +4177,8 @@ entities:
         22: AreaChem
         23: AreaChapel
         24: AreaSurgery
+    - type: BecomesStation
+      id: Voyager
     - type: OccluderTree
     - type: SpreaderGrid
     - type: Shuttle

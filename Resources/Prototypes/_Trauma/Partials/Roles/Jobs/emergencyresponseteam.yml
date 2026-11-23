@@ -2,6 +2,8 @@
 
 - type: job
   id: ERTLeader
+  name: job-name-ertcommander
+  setPreference: true
   access:
   - NanotrasenRepresentative
   special:
@@ -64,6 +66,7 @@
 # Engineer
 - type: job
   id: ERTEngineer
+  setPreference: true
   access:
   - NanotrasenRepresentative
   special:
@@ -89,6 +92,7 @@
 # Security
 - type: job
   id: ERTSecurity
+  setPreference: true
   access:
   - NanotrasenRepresentative
   special:
@@ -153,6 +157,7 @@
 # Medical
 - type: job
   id: ERTMedical
+  setPreference: true
   access:
   - NanotrasenRepresentative
   special:
