@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+using System.Net;
 using System.Security.Cryptography;
 using System.Threading;
 using Content.Goobstation.Common.Traits;
@@ -117,7 +118,7 @@ public sealed partial class ProximityVoiceSystem : EntitySystem
     {
         var session = args.SenderSession;
         var now = Environment.TickCount64;
-        if (!_enabled || !Uri.TryCreate(_config.GetCVar(ProximityVoiceCVars.PublicUrl), UriKind.Absolute, out var page)
+        if (!_enabled || !Uri.TryCreate(GetMicrophonePageUrl(session.Channel), UriKind.Absolute, out var page)
             || !(page.Scheme == Uri.UriSchemeHttps || page.Scheme == Uri.UriSchemeHttp && page.IsLoopback)
             || page.UserInfo.Length != 0 || page.Query.Length != 0 || page.Fragment.Length != 0
             || session.Status != SessionStatus.InGame)
@@ -147,6 +148,18 @@ public sealed partial class ProximityVoiceSystem : EntitySystem
             _tickets.Add(token, participant);
         }
         RaiseNetworkEvent(new VoicePairingResponseEvent(new UriBuilder(page) { Fragment = token }.Uri.AbsoluteUri), session);
+    }
+
+    private string GetMicrophonePageUrl(INetChannel channel)
+    {
+        var url = _config.GetCVar(ProximityVoiceCVars.PublicUrl);
+        if (url.Length != 0 || !IPAddress.IsLoopback(channel.RemoteEndPoint.Address))
+            return url;
+
+        // The status host accepts an address:port prefix (including *:port or [::1]:port).
+        var bind = _config.GetCVar(Robust.Shared.CVars.StatusBind);
+        var port = int.TryParse(bind.AsSpan(bind.LastIndexOf(':') + 1), out var boundPort) ? boundPort : _net.Port;
+        return $"http://localhost:{port}/voice";
     }
 
     private VoiceCapture? ClaimTicket(string token)
