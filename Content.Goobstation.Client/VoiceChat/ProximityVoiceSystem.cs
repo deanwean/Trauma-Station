@@ -78,7 +78,7 @@ public sealed partial class ProximityVoiceSystem : EntitySystem
 
         _requestDeadline = null;
         if (!_cfg.GetCVar(ProximityVoiceCVars.Enabled) ||
-            !Uri.TryCreate(message.Url, UriKind.Absolute, out var uri) ||
+            !Uri.TryCreate(baseUri: null, message.Url, out var uri) ||
             uri.UserInfo.Length != 0 ||
             !(uri.Scheme == Uri.UriSchemeHttps || uri.Scheme == Uri.UriSchemeHttp && uri.IsLoopback))
         {
