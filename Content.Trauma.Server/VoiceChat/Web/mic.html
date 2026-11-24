@@ -1,0 +1,38 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trauma Station proximity voice</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, system-ui, sans-serif; background: #172125; color: #ebf2f2; }
+    body { max-width: 30rem; margin: 10vh auto; padding: 0 1.4rem; }
+    h1 { font-size: 1.65rem; }
+    p { line-height: 1.55; }
+    button { font: inherit; padding: .65rem 1rem; border: 1px solid #79999a; border-radius: .35rem; cursor: pointer; }
+    button:disabled { cursor: default; }
+    #talk { touch-action: none; user-select: none; }
+    #talk[aria-pressed="true"] { background: #0d705b; color: white; }
+    #activity { color: #83e4bd; min-height: 1.5em; }
+    label { display: block; margin: 1rem 0; }
+    input { margin-inline-end: .5rem; }
+    code { background: #25383e; padding: .12rem .3rem; }
+  </style>
+  <script src="/voice/mic.js" defer></script>
+</head>
+<body>
+  <main>
+    <h1>Trauma Station proximity voice</h1>
+    <p id="status" role="status">Open the microphone link from the in-game <code>voice</code> command.</p>
+    <button id="connect" type="button" disabled>Connect microphone</button>
+    <section id="controls" hidden aria-label="Microphone controls">
+      <p>Hold the button to speak to nearby players. To speak while the game has focus, enable voice activation and leave this page open.</p>
+      <button id="talk" type="button" aria-pressed="false">Hold to talk</button>
+      <label><input type="checkbox" id="automatic">Voice activation while playing</label>
+      <p id="activity"></p>
+      <button id="stop" type="button">Disconnect microphone</button>
+    </section>
+  </main>
+</body>
+</html>

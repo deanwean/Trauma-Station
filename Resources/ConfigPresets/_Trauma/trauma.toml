@@ -11,6 +11,12 @@ max_announcement_length = 512
 
 [voice]
 barks_enabled = true
+# Proximity microphone chat is opt-in. Players use the client console commands "voice" and "voice off".
+# To enable it, set the following in the instance config. Forward /voice and /voice/* to
+# the game's status HTTP listener, with WebSocket upgrades for /voice/ws.
+# enabled = true
+# public_url = "https://station.example.org/voice"
+# For a single-machine test, use "http://localhost:1212/voice" with your status port.
 
 [shuttle]
 cooldown = 5
