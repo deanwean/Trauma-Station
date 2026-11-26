@@ -9,6 +9,9 @@
             <widgets:MessagingControls Name="MessagingControls" VerticalExpand="True" />
         </PanelContainer>
 
+        <Button Name="VoiceBroadcastButton" Margin="0 6 0 0" Visible="False"
+                ToolTip="{Loc 'comms-console-menu-voice-broadcast-button-tooltip'}" />
+
         <controls:HSpacer Spacing="12" />
 
         <PanelContainer StyleClasses="BackgroundPanelDark">

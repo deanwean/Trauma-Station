@@ -15,6 +15,9 @@
                 <ui:OptionSlider Name="SliderVolumeAmbience" Title="{Loc 'ui-options-ambience-volume'}" />
                 <ui:OptionSlider Name="SliderVolumeLobby" Title="{Loc 'ui-options-lobby-volume'}" />
                 <ui:OptionSlider Name="SliderVolumeInterface" Title="{Loc 'ui-options-interface-volume'}" />
+                <ui:OptionSlider Name="SliderVoiceVolume" Title="{Loc 'trauma-voice-playback-volume'}" />
+                <CheckBox Name="HearOwnVoiceCheckBox" Text="{Loc 'trauma-voice-hear-self'}" />
+                <ui:OptionSlider Name="SliderVoiceRadioVolume" Title="{Loc 'trauma-voice-radio-volume'}" />
                 <!-- Trauma -->
                 <ui:OptionSlider Name="SliderVolumeBarks" Title="{Loc 'ui-options-barks-volume'}" />
                 <ui:OptionSlider Name="SliderVolumeSpecial" Title="{Loc 'ui-options-special-volume'}" />
@@ -24,6 +27,7 @@
                 <ui:OptionSlider Name="SliderHighlightVolume" Title="{Loc 'ui-options-highlight-volume'}" /> <!-- Goobstation - Highlight chat Ping/Audio! -->
 
                 <CheckBox Name="HearSelfCheckBox" Text="{Loc 'ui-options-hear-self'}" />
+                <CheckBox Name="VoiceIndicatorsCheckBox" Text="{Loc 'trauma-voice-show-indicators'}" />
                 <CheckBox Name="LobbyMusicCheckBox" Text="{Loc 'ui-options-lobby-music'}" />
                 <CheckBox Name="RestartSoundsCheckBox" Text="{Loc 'ui-options-restart-sounds'}" />
                 <CheckBox Name="EventMusicCheckBox" Text="{Loc 'ui-options-event-music'}" />

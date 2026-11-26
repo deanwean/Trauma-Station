@@ -10,6 +10,8 @@ public static class VoiceCodec
     public const int HeaderBytes = 3;
     public const int FrameBytes = HeaderBytes + FrameSamples / 2;
 
+    public static float MegaphoneRange(int range) => MathF.Min(range * 1.5f, 64f);
+
     public const byte FlagTransmissionStart = 1;
     public const int StepCount = 89;
 

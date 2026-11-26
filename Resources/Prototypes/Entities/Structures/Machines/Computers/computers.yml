@@ -770,6 +770,7 @@
   name: communications computer
   description: A computer used to make station wide announcements via keyboard, set the appropriate alert level, and call the emergency shuttle.
   components:
+  - type: VoiceBroadcastConsole
   # <Trauma>
   - type: StationReportTarget # not given to aghost
   - type: StealTarget

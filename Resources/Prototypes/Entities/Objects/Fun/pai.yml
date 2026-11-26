@@ -6,6 +6,8 @@
   name: personal ai device
   description: Your electronic pal who's fun to be with!
   components:
+  - type: VoiceChatEffect
+    effect: Robot
   # <Trauma>
   - type: LanguageSpeaker
     speaks:

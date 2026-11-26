@@ -26,6 +26,8 @@
 - type: entity
   id: BaseBorgChassisNotIonStormable
   components:
+  - type: VoiceChatEffect
+    effect: Robot
   - type: IntrinsicRadioTransmitter
     channels: !Clear
     - Common

@@ -243,11 +243,21 @@ public abstract partial class SharedRadioDeviceSystem : EntitySystem
     [SubscribeLocalEvent]
     private void OnAttemptListen(Entity<RadioMicrophoneComponent> ent, ref ListenAttemptEvent args)
     {
-        if (ent.Comp.PowerRequired && !_power.IsPowered(ent.Owner)
-            || ent.Comp.UnobstructedRequired && !_interaction.InRangeUnobstructed(args.Source, ent.Owner, 0))
+        if (!CanPickUpSpeech(ent, args.Source))
         {
             args.Cancel();
         }
+    }
+
+    public bool CanPickUpSpeech(Entity<RadioMicrophoneComponent> microphone, EntityUid speaker)
+        => (!microphone.Comp.PowerRequired || _power.IsPowered(microphone.Owner)) &&
+           (!microphone.Comp.UnobstructedRequired || _interaction.InRangeUnobstructed(speaker, microphone.Owner, 0));
+
+    public bool IsVoiceSpeakerEnabled(Entity<RadioSpeakerComponent> speaker)
+    {
+        var requiresPower = speaker.Comp.PowerRequired ||
+            TryComp<IntercomComponent>(speaker.Owner, out var intercom) && intercom.RequiresPower;
+        return speaker.Comp.Enabled && (!requiresPower || _power.IsPowered(speaker.Owner));
     }
 
     [SubscribeLocalEvent]
@@ -354,6 +364,11 @@ public abstract partial class SharedRadioDeviceSystem : EntitySystem
             else
             {
                 speaker.Channels = [channel.Value];
+                if (speaker.Enabled && TryComp<ActiveRadioComponent>(ent.Owner, out var activeRadio))
+                {
+                    activeRadio.Channels.Clear();
+                    activeRadio.Channels.Add(channel.Value);
+                }
                 Dirty(ent, speaker);
             }
         }

@@ -158,44 +158,14 @@ public sealed partial class RadioSystem : SharedRadioSystem
         var ev = new RadioReceiveEvent(messageSource, channel, msg, notUdsMsg, language, radioSource);
         // </Trauma>
 
-        var sendAttemptEv = new RadioSendAttemptEvent(channel, radioSource);
-        RaiseLocalEvent(ref sendAttemptEv);
-        RaiseLocalEvent(radioSource, ref sendAttemptEv);
-        RaiseLocalEvent(messageSource, ref sendAttemptEv); // Trauma
-        var canSend = !sendAttemptEv.Cancelled;
-
-        var sourceMapId = Transform(radioSource).MapID;
-        var hasActiveServer = HasActiveServer(sourceMapId, channel.ID);
-        var sourceServerExempt = _exemptQuery.HasComp(radioSource);
-
-        var radioQuery = EntityQueryEnumerator<ActiveRadioComponent, TransformComponent>();
-        while (canSend && radioQuery.MoveNext(out var receiver, out var radio, out var transform))
+        if (TryStartTransmission(messageSource, radioSource, channel, out var transmission))
         {
-            if (!radio.ReceiveAllChannels)
+            var radioQuery = EntityQueryEnumerator<ActiveRadioComponent, TransformComponent>();
+            while (radioQuery.MoveNext(out var receiver, out var radio, out var transform))
             {
-                if (!radio.Channels.Contains(channel.ID) || (TryComp<IntercomComponent>(receiver, out var intercom) &&
-                                                             !intercom.SupportedChannels.Contains(channel.ID)))
-                    continue;
+                if (CanReceiveTransmission(transmission, receiver, radio, transform))
+                    RaiseLocalEvent(receiver, ref ev);
             }
-
-            if (!channel.LongRange && transform.MapID != sourceMapId && !radio.GlobalReceive
-                && !(HasActiveTransmitter(transform.MapID) && HasActiveTransmitter(sourceMapId))) // goob - intermap transmitters
-                continue;
-
-            // don't need telecom server for long range channels or handheld radios and intercoms
-            var needServer = !channel.LongRange && !sourceServerExempt;
-            if (needServer && !hasActiveServer)
-                continue;
-
-            // check if message can be sent to specific receiver
-            var attemptEv = new RadioReceiveAttemptEvent(channel, radioSource, receiver);
-            RaiseLocalEvent(ref attemptEv);
-            RaiseLocalEvent(receiver, ref attemptEv);
-            if (attemptEv.Cancelled)
-                continue;
-
-            // send the message
-            RaiseLocalEvent(receiver, ref ev);
         }
 
         if (name != Name(messageSource))
@@ -205,6 +175,43 @@ public sealed partial class RadioSystem : SharedRadioSystem
 
         _replay.RecordServerMessage(msg); // Einstein Engines - Language
         _messages.Remove(message);
+    }
+
+    public readonly record struct RadioTransmission(EntityUid Source, MapId Map, RadioChannelPrototype Channel);
+
+    /// <summary>Checks the source, speaker, jamming and telecom rules shared by radio speech and voice.</summary>
+    public bool TryStartTransmission(EntityUid speaker, EntityUid source, RadioChannelPrototype channel, out RadioTransmission transmission)
+    {
+        var map = Transform(source).MapID;
+        transmission = new RadioTransmission(source, map, channel);
+        var attempt = new RadioSendAttemptEvent(channel, source);
+        RaiseLocalEvent(ref attempt);
+        RaiseLocalEvent(source, ref attempt);
+        RaiseLocalEvent(speaker, ref attempt);
+        return !attempt.Cancelled && (channel.LongRange || _exemptQuery.HasComp(source) || HasActiveServer(map, channel.ID));
+    }
+
+    public bool CanReceiveTransmission(RadioTransmission transmission, EntityUid receiver)
+    {
+        return TryComp<ActiveRadioComponent>(receiver, out var radio) &&
+               CanReceiveTransmission(transmission, receiver, radio, Transform(receiver));
+    }
+
+    private bool CanReceiveTransmission(RadioTransmission transmission, EntityUid receiver, ActiveRadioComponent radio, TransformComponent transform)
+    {
+        var channel = transmission.Channel;
+        if (!radio.ReceiveAllChannels && (!radio.Channels.Contains(channel.ID) ||
+            TryComp<IntercomComponent>(receiver, out var intercom) && !intercom.SupportedChannels.Contains(channel.ID)))
+            return false;
+
+        if (!channel.LongRange && transform.MapID != transmission.Map && !radio.GlobalReceive &&
+            !(HasActiveTransmitter(transform.MapID) && HasActiveTransmitter(transmission.Map)))
+            return false;
+
+        var attempt = new RadioReceiveAttemptEvent(channel, transmission.Source, receiver);
+        RaiseLocalEvent(ref attempt);
+        RaiseLocalEvent(receiver, ref attempt);
+        return !attempt.Cancelled;
     }
 
     /// <inheritdoc cref="TelecomServerComponent"/>

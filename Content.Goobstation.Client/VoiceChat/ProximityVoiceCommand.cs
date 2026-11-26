@@ -26,6 +26,12 @@ public sealed partial class ProximityVoiceCommand : IConsoleCommand
             voice.RequestPairing(shell);
         else if (args is ["off"])
             voice.Leave(shell);
+        else if (args is ["channels"])
+            voice.RequestRadio(shell, null, queryOnly: true);
+        else if (args is ["local"])
+            voice.RequestRadio(shell, null);
+        else if (args is ["radio", var channel])
+            voice.RequestRadio(shell, channel);
         else
             shell.WriteError(Help);
     }

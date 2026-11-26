@@ -246,6 +246,8 @@ namespace Content.Client.Options.UI.Tabs
             AddButton(ContentKeyFunctions.FocusDeadChat);
             AddButton(ContentKeyFunctions.FocusConsoleChat);
             AddButton(ContentKeyFunctions.CycleChatChannelForward);
+            AddButton(ContentKeyFunctions.VoicePushToTalk);
+            AddButton(ContentKeyFunctions.VoiceRadioPushToTalk);
             AddButton(ContentKeyFunctions.CycleChatChannelBackward);
             AddButton(ContentKeyFunctions.OpenCharacterMenu);
             AddButton(ContentKeyFunctions.OpenCraftingMenu);

@@ -6,6 +6,8 @@
   name: xenomorph facehugger
   description: A writhing nightmare. The facehugger clings to its victim's face, forcibly inserting a xenomorph fetus.
   components:
+  - type: VoiceChatEffect
+    effect: Alien
   - type: Sprite
     sprite: _Trauma/Mobs/Xenos/facehugger.rsi
     layers:

@@ -12,6 +12,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Serilog" />
+		<PackageReference Include="NWaves" />
 		<EmbeddedResource Include="VoiceChat/Web/*" LogicalName="Trauma.Voice.%(Filename)%(Extension)" />
 	</ItemGroup>
 

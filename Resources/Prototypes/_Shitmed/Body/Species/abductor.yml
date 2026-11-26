@@ -42,6 +42,8 @@
   id: MobAbductor
   name: Urist McAlien
   components:
+  - type: VoiceChatEffect
+    effect: Abductor
   - type: Absorbable
   - type: WraithAbsorbable
   - type: Bloodstream

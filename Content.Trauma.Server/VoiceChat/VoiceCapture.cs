@@ -16,6 +16,27 @@ internal sealed class VoiceCapture : IDisposable
     private double _allowance = MaxQueuedFrames;
     private long _lastFrameAt = Stopwatch.GetTimestamp();
     private bool _closed;
+    private string? _browserKey;
+    private long _connection;
+    private volatile bool _connected;
+    private volatile VoiceInputMode _mode;
+
+    public bool IsConnected => _connected;
+
+    public VoiceInputMode Mode
+    {
+        get => _mode;
+        set
+        {
+            if (_mode == value)
+                return;
+            lock (_frames)
+            {
+                _mode = value;
+                _frames.Clear();
+            }
+        }
+    }
 
     public CancellationToken Revoked { get; }
 
@@ -24,23 +45,61 @@ internal sealed class VoiceCapture : IDisposable
         Revoked = _revoke.Token;
     }
 
-    // The socket transfers ownership of the frame buffer.
-    public bool TrySubmit(byte[] frame)
+    public bool AuthorizeBrowser(string browserKey, bool initialLinkValid)
+    {
+        lock (_frames)
+        {
+            if (_closed || (_browserKey == null && !initialLinkValid))
+                return false;
+
+            _browserKey ??= browserKey;
+            return System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(
+                System.Text.Encoding.ASCII.GetBytes(_browserKey), System.Text.Encoding.ASCII.GetBytes(browserKey));
+        }
+    }
+
+    public long OpenStream()
+    {
+        lock (_frames)
+        {
+            _frames.Clear();
+            _allowance = MaxQueuedFrames;
+            _lastFrameAt = Stopwatch.GetTimestamp();
+            _connected = !_closed;
+            return ++_connection;
+        }
+    }
+
+    public void CloseStream(long connection)
+    {
+        lock (_frames)
+        {
+            if (connection != _connection)
+                return;
+            _connected = false;
+            _frames.Clear();
+        }
+    }
+
+    // Only the latest connection can submit. A burst of valid frames is dropped without unpairing.
+    public bool TrySubmit(long connection, byte[] frame)
     {
         if (!VoiceCodec.IsValidFrame(frame))
             return false;
 
         lock (_frames)
         {
-            if (_closed)
+            if (!_connected || connection != _connection)
                 return false;
+            if (_mode == VoiceInputMode.Muted)
+                return true;
 
             var now = Stopwatch.GetTimestamp();
             var elapsed = Stopwatch.GetElapsedTime(_lastFrameAt, now).TotalSeconds;
             _allowance = Math.Min(MaxQueuedFrames, _allowance + elapsed * FramesPerSecond);
             _lastFrameAt = now;
             if (_allowance < 1)
-                return false;
+                return true;
 
             _allowance--;
             if (_frames.Count == MaxQueuedFrames)
@@ -78,6 +137,7 @@ internal sealed class VoiceCapture : IDisposable
             if (_closed)
                 return;
             _closed = true;
+            _connected = false;
             _frames.Clear();
         }
 

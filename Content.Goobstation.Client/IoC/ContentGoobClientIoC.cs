@@ -4,6 +4,8 @@ using Content.Goobstation.Client.JumpScare;
 using Content.Goobstation.Client.Polls;
 using Content.Goobstation.Client.Redial;
 using Content.Goobstation.Client.ServerCurrency;
+using Content.Client.UserInterface.Systems.Chat.Controls;
+using Content.Goobstation.Client.VoiceChat;
 using Content.Goobstation.Common.ServerCurrency;
 using Content.Goobstation.Shared.JumpScare;
 using Robust.Shared.IoC;
@@ -16,6 +18,7 @@ internal static class ContentGoobClientIoC
     {
         collection.Register<RedialManager>();
         collection.Register<PollManager>();
+        collection.Register<IChatVoiceControls, TraumaChatVoiceControls>();
         collection.Register<IFullScreenImageJumpscare, ClientFullScreenImageJumpscare>();
         collection.Register<ICommonCurrencyManager, ClientCurrencyManager>();
     }

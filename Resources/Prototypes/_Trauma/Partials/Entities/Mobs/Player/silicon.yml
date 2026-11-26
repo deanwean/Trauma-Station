@@ -3,6 +3,8 @@
 - type: entity
   id: AiHeld
   components:
+  - type: VoiceChatEffect
+    effect: Robot
   - type: CollectiveMind
     defaultChannel: Binary
     channels:

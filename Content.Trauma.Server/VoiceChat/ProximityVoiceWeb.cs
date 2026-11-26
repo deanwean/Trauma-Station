@@ -24,9 +24,9 @@ internal sealed class ProximityVoiceWeb
     private readonly ISawmill _log = Logger.GetSawmill("voice");
     private Registration? _current;
 
-    private sealed record Registration(Func<bool> Enabled, Func<string, VoiceCapture?> Pair, CancellationToken Shutdown);
+    private sealed record Registration(Func<bool> Enabled, Func<string, string, VoiceCapture?> Pair, CancellationToken Shutdown);
 
-    public static void Register(IStatusHost host, Func<bool> enabled, Func<string, VoiceCapture?> pair, CancellationToken shutdown)
+    public static void Register(IStatusHost host, Func<bool> enabled, Func<string, string, VoiceCapture?> pair, CancellationToken shutdown)
     {
         var web = Hosts.GetValue(host, static statusHost =>
         {
@@ -115,11 +115,12 @@ internal sealed class ProximityVoiceWeb
                 {
                     using var timeout = CancellationTokenSource.CreateLinkedTokenSource(registration.Shutdown);
                     timeout.CancelAfter(TimeSpan.FromSeconds(5));
-                    var token = new byte[64];
-                    if (!await ReceiveFixed(socket, token, WebSocketMessageType.Text, timeout.Token))
+                    var credentials = new byte[128];
+                    if (!await ReceiveFixed(socket, credentials, WebSocketMessageType.Text, timeout.Token))
                         return;
 
-                    capture = registration.Pair(Encoding.ASCII.GetString(token));
+                    capture = registration.Pair(Encoding.ASCII.GetString(credentials, 0, 64).TrimEnd(' '),
+                        Encoding.ASCII.GetString(credentials, 64, 64));
                 }
                 finally
                 {
@@ -127,18 +128,26 @@ internal sealed class ProximityVoiceWeb
                 }
 
                 if (capture == null)
+                {
+                    await socket.CloseOutputAsync(WebSocketCloseStatus.PolicyViolation, "Microphone link rejected", registration.Shutdown);
                     return;
+                }
 
-                using (capture)
                 using (var lifetime = CancellationTokenSource.CreateLinkedTokenSource(registration.Shutdown, capture.Revoked))
                 {
-                    await socket.SendAsync(Ready.AsMemory(), WebSocketMessageType.Text, true, lifetime.Token);
-                    while (!lifetime.IsCancellationRequested)
+                    var connection = capture.OpenStream();
+                    try
                     {
-                        var frame = new byte[VoiceCodec.FrameBytes];
-                        if (!await ReceiveFixed(socket, frame, WebSocketMessageType.Binary, lifetime.Token) ||
-                            !capture.TrySubmit(frame))
-                            return;
+                        await socket.SendAsync(Ready.AsMemory(), WebSocketMessageType.Text, true, lifetime.Token);
+                        var receive = ReceiveFrames(socket, capture, connection, lifetime.Token);
+                        var send = SendInputMode(socket, capture, lifetime.Token);
+                        await Task.WhenAny(receive, send);
+                        lifetime.Cancel();
+                        await Task.WhenAll(receive, send);
+                    }
+                    finally
+                    {
+                        capture.CloseStream(connection);
                     }
                 }
             }
@@ -151,6 +160,32 @@ internal sealed class ProximityVoiceWeb
                 _log.Error($"Microphone connection ended unexpectedly: {error.GetType().Name}");
             }
         }
+    }
+
+    private static async Task ReceiveFrames(WebSocket socket, VoiceCapture capture, long connection, CancellationToken cancel)
+    {
+        while (!cancel.IsCancellationRequested)
+        {
+            var frame = new byte[VoiceCodec.FrameBytes];
+            if (!await ReceiveFixed(socket, frame, WebSocketMessageType.Binary, cancel) ||
+                !capture.TrySubmit(connection, frame))
+                return;
+        }
+    }
+
+    private static async Task SendInputMode(WebSocket socket, VoiceCapture capture, CancellationToken cancel)
+    {
+        using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(35));
+        VoiceInputMode? previous = null;
+        do
+        {
+            var mode = capture.Mode;
+            if (mode == previous)
+                continue;
+            previous = mode;
+            var frame = Encoding.ASCII.GetBytes($"mode:{(int) mode}");
+            await socket.SendAsync(frame.AsMemory(), WebSocketMessageType.Text, true, cancel);
+        } while (await timer.WaitForNextTickAsync(cancel));
     }
 
     private static async Task<bool> ReceiveFixed(WebSocket socket, byte[] bytes, WebSocketMessageType type, CancellationToken cancel)

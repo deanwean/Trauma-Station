@@ -518,6 +518,12 @@ public sealed partial class TelephoneSystem : SharedTelephoneSystem
         return source.Comp.LinkedTelephones.Contains(receiver);
     }
 
+    public void KeepCallAlive(Entity<TelephoneComponent> telephone)
+    {
+        if (telephone.Comp.CurrentState == TelephoneState.InCall)
+            telephone.Comp.StateStartTime = _timing.CurTime;
+    }
+
     public bool IsTelephonePowered(Entity<TelephoneComponent> entity)
     {
         return this.IsPowered(entity, EntityManager);

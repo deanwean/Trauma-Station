@@ -1,3 +1,7 @@
+using Content.Goobstation.Shared.VoiceChat;
+using Robust.Client.Player;
+using Robust.Shared.Configuration;
+using Robust.Shared.Timing;
 using Content.Shared.AlertLevel;
 using Content.Shared.Communications;
 using Content.Client.UserInterface.Controls;
@@ -14,6 +18,12 @@ namespace Content.Client.Communications.UI;
 [GenerateTypedNameReferences]
 public sealed partial class CommunicationsConsoleMenu : FancyWindow
 {
+    [Dependency] private IConfigurationManager _voiceConfig = default!;
+    [Dependency] private IPlayerManager _voicePlayer = default!;
+
+    public EntityUid Console { get; set; }
+    public event Action? OnVoiceBroadcast;
+
     public event Action<string>? OnShuttleCalled; // Trauma - added string for reason
     public event Action<string>? OnShuttleRecalled; // Trauma - ^
     public event Action<ProtoId<AlertLevelPrototype>>? OnAlertLevelChanged;
@@ -24,6 +34,7 @@ public sealed partial class CommunicationsConsoleMenu : FancyWindow
     {
         IoCManager.InjectDependencies(this);
         RobustXamlLoader.Load(this);
+        VoiceBroadcastButton.OnPressed += _ => OnVoiceBroadcast?.Invoke();
 
         MessagingControls.OnRadioAnnounce += message => OnRadioAnnounce?.Invoke(message);
         MessagingControls.OnScreenBroadcast += message => OnScreenBroadcast?.Invoke(message);
@@ -33,6 +44,54 @@ public sealed partial class CommunicationsConsoleMenu : FancyWindow
         ShuttleControls.OnShuttleCalled += () => OnShuttleCalled?.Invoke(MessagingControls.GetEvacReason()); // Trauma - pass reason
         ShuttleControls.OnShuttleRecalled += () => OnShuttleRecalled?.Invoke(MessagingControls.GetEvacReason()); // Trauma - pass reason
     }
+
+    protected override void FrameUpdate(FrameEventArgs args)
+    {
+        base.FrameUpdate(args);
+        UpdateVoiceBroadcast();
+    }
+
+    private void UpdateVoiceBroadcast()
+    {
+        if (!_voiceConfig.GetCVar(ProximityVoiceCVars.Enabled) ||
+            !_ent.TryGetComponent<VoiceBroadcastConsoleComponent>(Console, out var broadcast))
+        {
+            VoiceBroadcastButton.Visible = false;
+            return;
+        }
+
+        VoiceBroadcastButton.Visible = true;
+        var now = _timing.CurTime;
+        string text;
+        bool disabled;
+
+        if (broadcast.Broadcaster is { } broadcaster)
+        {
+            var mine = broadcaster == _voicePlayer.LocalEntity;
+            var seconds = (int) Math.Ceiling(Math.Max(0, (broadcast.EndTime - now).TotalSeconds));
+            text = mine
+                ? Loc.GetString("comms-console-menu-voice-broadcast-stop", ("seconds", seconds))
+                : Loc.GetString("comms-console-menu-voice-broadcast-busy");
+            disabled = !mine;
+        }
+        else if (now < broadcast.NextBroadcast)
+        {
+            var seconds = (int) Math.Ceiling((broadcast.NextBroadcast - now).TotalSeconds);
+            text = Loc.GetString("comms-console-menu-voice-broadcast-cooldown", ("seconds", seconds));
+            disabled = true;
+        }
+        else
+        {
+            text = Loc.GetString("comms-console-menu-voice-broadcast-button");
+            disabled = false;
+        }
+
+        if (VoiceBroadcastButton.Text != text)
+            VoiceBroadcastButton.Text = text;
+
+        VoiceBroadcastButton.Disabled = disabled;
+    }
+
 
     /// <summary>
     /// Use the specified prototype ID as an example display in the

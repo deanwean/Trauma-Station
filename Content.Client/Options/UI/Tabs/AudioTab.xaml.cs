@@ -1,5 +1,6 @@
 // <Trauma>
 using Content.Goobstation.Common.CCVar;
+using Content.Goobstation.Shared.VoiceChat;
 using Content.Trauma.Common.CCVar;
 // </Trauma>
 using Content.Client.Administration.Managers;
@@ -33,6 +34,10 @@ public sealed partial class AudioTab : Control
             SliderVolumeMaster,
             scale: ContentAudioSystem.MasterVolumeMultiplier);
         masterVolume.ImmediateValueChanged += OnMasterVolumeSliderChanged;
+        Control.AddOptionPercentSlider(ProximityVoiceCVars.Volume, SliderVoiceVolume, scale: 1f);
+        Control.AddOptionPercentSlider(ProximityVoiceCVars.RadioVolume, SliderVoiceRadioVolume, scale: 2f);
+        Control.AddOptionCheckBox(ProximityVoiceCVars.HearSelf, HearOwnVoiceCheckBox);
+        Control.AddOptionCheckBox(ProximityVoiceCVars.ShowIndicators, VoiceIndicatorsCheckBox);
 
         // <Trauma>
         Control.AddOptionPercentSlider(

@@ -127,6 +127,12 @@ binds:
   type: State
   key: Tab
   mod1: Control
+- function: VoicePushToTalk
+  type: State
+  key: N
+- function: VoiceRadioPushToTalk
+  type: State
+  key: M
 - function: FocusChatInputWindow
   type: State
   key: T

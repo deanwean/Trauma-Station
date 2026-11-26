@@ -34,6 +34,11 @@ public class ChatInputBox : PanelContainer
             MinWidth = 75
         };
         Container.AddChild(ChannelSelector);
+        if (IoCManager.Instance is { } ioc && ioc.TryResolveType<IChatVoiceControls>(out var voiceControls))
+        {
+            foreach (var control in voiceControls.CreateControls())
+                Container.AddChild(control);
+        }
         Input = new HistoryLineEdit
         {
             Name = "Input",

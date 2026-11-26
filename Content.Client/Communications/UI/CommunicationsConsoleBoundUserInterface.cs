@@ -1,3 +1,4 @@
+using Content.Goobstation.Shared.VoiceChat;
 using Content.Shared.CCVar;
 using Content.Shared.Chat;
 using Content.Shared.AlertLevel;
@@ -30,6 +31,8 @@ public sealed partial class CommunicationsConsoleBoundUserInterface(EntityUid ow
         base.Open();
 
         _menu = this.CreateWindow<CommunicationsConsoleMenu>();
+        _menu.Console = Owner;
+        _menu.OnVoiceBroadcast += () => SendMessage(new VoiceBroadcastToggleMessage());
         _menu.AlertLevel = _alertLevel; // Trauma
         _menu.OnRadioAnnounce += RadioAnnounceButtonPressed;
         _menu.OnScreenBroadcast += ScreenBroadcastButtonPressed;

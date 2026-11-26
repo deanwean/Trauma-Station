@@ -1,0 +1,13 @@
+comms-console-menu-voice-broadcast-button = Voice Broadcast
+comms-console-menu-voice-broadcast-button-tooltip = Speak to the whole station over voice chat for a short time.
+comms-console-menu-voice-broadcast-stop = End Voice Broadcast ({$seconds}s)
+comms-console-menu-voice-broadcast-busy = Voice Broadcast in Progress
+comms-console-menu-voice-broadcast-cooldown = Voice Broadcast ({$seconds}s)
+voice-broadcast-denied = Access denied.
+voice-broadcast-not-connected = Connect your microphone from the voice chat button first.
+voice-broadcast-started = You're broadcasting to the whole station for {$seconds} seconds.
+voice-broadcast-ended = Your voice broadcast has ended.
+voice-route-holopad = Holopad
+voice-route-camera = Camera
+voice-route-broadcast = Broadcast
+voice-route-megaphone = Megaphone

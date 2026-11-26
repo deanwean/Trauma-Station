@@ -1,0 +1,16 @@
+voice-radio-button-off = Local
+voice-radio-button-tooltip = Voice chat radio: pick the channel you talk on, which channels you hear, and radio volume.
+voice-radio-popup-talk = Talk
+voice-radio-popup-hear = Hear
+voice-radio-popup-volume = Volume
+voice-radio-popup-volume-value = {$percent}%
+voice-mic-offline = Voice chat isn't open. Click to open it.
+voice-mic-ready = Microphone on. Click to mute.
+voice-mic-live = You're live. Click to mute.
+voice-mic-blocked = Your character can't speak right now.
+voice-mic-muted = Microphone muted. Click to unmute.
+voice-mic-deafened = Deafened. Click to undeafen and unmute.
+voice-deafen-off = Deafen: silence all voice chat and mute your microphone.
+voice-deafen-on = Deafened. Click to undeafen.
+voice-radio-popup-mute-all = Mute all
+voice-radio-popup-unmute-all = Unmute all

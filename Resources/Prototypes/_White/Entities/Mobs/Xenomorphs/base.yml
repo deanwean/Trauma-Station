@@ -11,6 +11,8 @@
   id: BaseMobXenomorph
   abstract: true
   components:
+  - type: VoiceChatEffect
+    effect: Alien
   - type: LanguageHivemind
     language: XenoHivemind
   - type: Xenomorph
