@@ -7,4 +7,9 @@ namespace Content.Trauma.Shared.Spawners;
 /// Requires a SpawnPoint component with a specific job.
 /// </summary>
 [RegisterComponent, NetworkedComponent]
-public sealed partial class JobLateJoinSpawnPointComponent : Component;
+public sealed partial class JobLateJoinSpawnPointComponent : Component
+{
+    /// <summary>Allow this job marker on an unassigned outpost grid at round start and on late join.</summary>
+    [DataField]
+    public bool AllowUnassignedGrid;
+}

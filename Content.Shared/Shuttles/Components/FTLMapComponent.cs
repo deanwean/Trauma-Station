@@ -12,7 +12,11 @@ public sealed partial class FTLMapComponent : Component
     /// Offset for FTLing shuttles so they don't overlap each other.
     /// </summary>
     [DataField]
-    public int Index;
+    public float Index;
+
+    /// <summary>Direction in which the shuttles on this map travel.</summary>
+    [DataField, AutoNetworkedField]
+    public Direction TravelDirection = Direction.North;
 
     /// <summary>
     /// What parallax to use for the background, immediately gets deffered to ParallaxComponent.

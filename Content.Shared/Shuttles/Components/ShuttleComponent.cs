@@ -5,6 +5,10 @@ namespace Content.Shared.Shuttles.Components;
 [RegisterComponent]
 public sealed partial class ShuttleComponent : Component
 {
+    /// <summary>The direction of the bow in local grid coordinates.</summary>
+    [DataField]
+    public Direction FtlForward = Direction.North;
+
     [ViewVariables]
     public bool Enabled = true;
 

@@ -8,6 +8,7 @@ using Content.Shared.Clothing.Components;
 using Content.Shared.Inventory;
 using Content.Shared.Nutrition.Components;
 using Content.Goobstation.Shared.VoiceChat;
+using Content.Server.Holopad;
 using Content.Server.Power.EntitySystems;
 using Content.Server.Telephone;
 using Content.Shared.Holopad;
@@ -26,6 +27,7 @@ public sealed partial class ProximityVoiceSystem
     [Dependency] private SharedStationAiSystem _stationAi = default!;
     [Dependency] private EntityLookupSystem _lookup = default!;
     [Dependency] private SharedInteractionSystem _interaction = default!;
+    [Dependency] private HolopadSystem _holopad = default!;
     [Dependency] private TelephoneSystem _telephone = default!;
     [Dependency] private PowerReceiverSystem _power = default!;
     [Dependency] private VoiceBroadcastSystem _broadcast = default!;
@@ -125,6 +127,7 @@ public sealed partial class ProximityVoiceSystem
                 _holopadRelays.Add((emitter, position, linkedPhone.SpeakerVolume == TelephoneVolume.Speak ? range : 2f));
                 if (audible)
                 {
+                    _holopad.SetVoiceSpeaker((uid, pad), speaker);
                     _telephone.KeepCallAlive((uid, telephone));
                     _telephone.KeepCallAlive((linked, linkedPhone));
                 }

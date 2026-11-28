@@ -550,6 +550,12 @@ public sealed partial class HolopadSystem : SharedHolopadSystem
         _userInterfaceSystem.SetUiState(entity.Owner, uiKey, new HolopadBoundInterfaceState(holopads));
     }
 
+    public void SetVoiceSpeaker(Entity<HolopadComponent> pad, EntityUid speaker)
+    {
+        if (pad.Comp.User != speaker)
+            LinkHolopadToUser(pad, speaker);
+    }
+
     private void GenerateHologram(Entity<HolopadComponent> entity)
     {
         if (entity.Comp.Hologram != null ||

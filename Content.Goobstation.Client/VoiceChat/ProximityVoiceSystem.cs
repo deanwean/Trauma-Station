@@ -293,6 +293,7 @@ public sealed partial class ProximityVoiceSystem : EntitySystem
             _speakers.Add(message.Source, stream);
         }
 
+        stream.SpeakerName = message.SpeakerName;
         stream.AddFrame(message.Sequence, message.Payload, now);
         if (message.Route == VoiceDeliveryRoute.Dead)
             stream.DeadPosition = message.DeadPosition;
@@ -510,6 +511,9 @@ public sealed partial class ProximityVoiceSystem : EntitySystem
 
     internal string DescribeSpeaker(ProximityVoiceStream stream)
     {
+        if (!string.IsNullOrEmpty(stream.SpeakerName))
+            return stream.SpeakerName;
+
         if (_players.LocalEntity is {} listener && !stream.Global &&
             TryGetEntity(stream.Emitter, out var emitter) && _examine.CanExamine(listener, emitter.Value))
             return Name(emitter.Value);

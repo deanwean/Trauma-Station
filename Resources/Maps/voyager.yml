@@ -5,7 +5,7 @@ meta:
   forkId: ""
   forkVersion: ""
   time: 07/30/2026 17:00:15
-  entityCount: 19077
+  entityCount: 19078
 maps:
 - 1
 grids:
@@ -350,6 +350,7 @@ entities:
     - type: OccluderTree
     - type: SpreaderGrid
     - type: Shuttle
+      ftlForward: East
       dampingModifiers:
         Cruise: 0.0075
         Dampen: 0.25
@@ -4177,8 +4178,6 @@ entities:
         22: AreaChem
         23: AreaChapel
         24: AreaSurgery
-    - type: BecomesStation
-      id: Voyager
     - type: OccluderTree
     - type: SpreaderGrid
     - type: Shuttle
@@ -54748,6 +54747,16 @@ entities:
     - type: AccessReader
       accessListsOriginal:
       - - CentralCommand
+- proto: CoordinatesDisk
+  entities:
+  - uid: 19078
+    components:
+    - type: MetaData
+      name: CentComm coordinates disc
+    - type: Transform
+      parent: 9935
+      pos: 18.8,11.5
+    - type: CentcommCoordinatesDisk
 - proto: CentrifugeMachineCircuitboard
   entities:
   - uid: 3631

@@ -48,14 +48,12 @@ entities:
   - uid: 1
     components:
     - type: MetaData
+      name: Syndicate Clown Outpost
     - type: Transform
     - type: Map
       mapPaused: True
     - type: GridTree
     - type: FTLDestination
-      whitelist:
-        tags:
-        - Syndicate
     - type: Broadphase
     - type: OccluderTree
     - type: Parallax

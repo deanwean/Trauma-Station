@@ -98,6 +98,7 @@ public sealed class MsgProximityVoiceFrame : NetMessage
     public bool Audible;
     public MapCoordinates DeadPosition;
     public string RadioChannel = string.Empty;
+    public string SpeakerName = string.Empty;
     public ushort Sequence;
     public byte[] Payload = [];
 
@@ -107,8 +108,11 @@ public sealed class MsgProximityVoiceFrame : NetMessage
 
     private bool IncludesChannel => Route is VoiceDeliveryRoute.Radio or VoiceDeliveryRoute.RadioSpeaker;
 
+    private bool IncludesName => Route is VoiceDeliveryRoute.Broadcast or VoiceDeliveryRoute.Holopad;
+    private bool HasExtraText => IncludesChannel || IncludesName;
+
     public override int EstimateBufferSize() => BaseSize + (Route == VoiceDeliveryRoute.Dead ? PositionSize : 0) +
-        (IncludesChannel ? System.Text.Encoding.UTF8.GetByteCount(RadioChannel) + sizeof(int) : 0);
+        (HasExtraText ? System.Text.Encoding.UTF8.GetByteCount(IncludesName ? SpeakerName : RadioChannel) + sizeof(int) : 0);
 
     public override void WriteToBuffer(NetOutgoingMessage buffer, IRobustSerializer serializer)
     {
@@ -124,6 +128,8 @@ public sealed class MsgProximityVoiceFrame : NetMessage
         buffer.Write(Payload);
         if (IncludesChannel)
             buffer.Write(RadioChannel);
+        else if (IncludesName)
+            buffer.Write(SpeakerName);
     }
 
     public override void ReadFromBuffer(NetIncomingMessage buffer, IRobustSerializer serializer)
@@ -138,7 +144,7 @@ public sealed class MsgProximityVoiceFrame : NetMessage
         Route = (VoiceDeliveryRoute) (flags & ~AudibleFlag);
         Audible = (flags & AudibleFlag) != 0;
         if (Route > VoiceDeliveryRoute.Megaphone ||
-            (IncludesChannel ? bits <= BaseSize * 8 : bits != EstimateBufferSize() * 8))
+            (HasExtraText ? bits <= BaseSize * 8 : bits != EstimateBufferSize() * 8))
             return;
         if (Route == VoiceDeliveryRoute.Dead)
             DeadPosition = new MapCoordinates(buffer.ReadVector2(), new MapId(buffer.ReadInt32()));
@@ -146,5 +152,7 @@ public sealed class MsgProximityVoiceFrame : NetMessage
         Payload = buffer.ReadBytes(VoiceCodec.FrameBytes);
         if (IncludesChannel)
             RadioChannel = buffer.ReadString();
+        else if (IncludesName)
+            SpeakerName = buffer.ReadString();
     }
 }

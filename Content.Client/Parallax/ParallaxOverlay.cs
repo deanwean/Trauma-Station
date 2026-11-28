@@ -2,6 +2,7 @@ using System.Numerics;
 using Content.Client.Parallax.Managers;
 using Content.Shared.CCVar;
 using Content.Shared.Parallax.Biomes;
+using Content.Shared.Shuttles.Components;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Shared.Configuration;
@@ -14,6 +15,8 @@ namespace Content.Client.Parallax;
 
 public sealed partial class ParallaxOverlay : Overlay
 {
+    private const float HyperspaceScrollSpeed = 20f;
+
     [Dependency] private IEntityManager _entManager = default!;
     [Dependency] private IGameTiming _timing = default!;
     [Dependency] private IPrototypeManager _prototypeManager = default!;
@@ -53,6 +56,8 @@ public sealed partial class ParallaxOverlay : Overlay
 
         var layers = _parallax.GetParallaxLayers(args.MapId);
         var realTime = (float) _timing.RealTime.TotalSeconds;
+        var map = _mapSystem.GetMapOrInvalid(args.MapId);
+        var hyperspace = _entManager.TryGetComponent<FTLMapComponent>(map, out var ftlMap);
 
         foreach (var layer in layers)
         {
@@ -79,6 +84,13 @@ public sealed partial class ParallaxOverlay : Overlay
 
             // Origin - start with the parallax shift itself.
             var originBL = (position - home) * layer.Config.Slowness + scrolled;
+            if (hyperspace)
+            {
+                // Anchor to the eye and scroll opposite the lane heading. Camera translation
+                // from walking or physics interpolation cannot add a sideways drift.
+                var speed = HyperspaceScrollSpeed * (1f - layer.Config.Slowness);
+                originBL = position - home - ftlMap!.TravelDirection.ToVec() * (speed * realTime);
+            }
 
             // Place at the home.
             originBL += home;

@@ -91,6 +91,7 @@ public sealed partial class EmergencyShuttleSystem : SharedEmergencyShuttleSyste
         SubscribeLocalEvent<StationEmergencyShuttleComponent, StationPostInitEvent>(OnStationStartup);
         SubscribeLocalEvent<StationCentcommComponent, ComponentShutdown>(OnCentcommShutdown);
         SubscribeLocalEvent<StationCentcommComponent, MapInitEvent>(OnStationInit);
+        SubscribeLocalEvent<CentcommCoordinatesDiskComponent, MapInitEvent>(OnCentcommDiskInit);
 
         SubscribeLocalEvent<EmergencyShuttleComponent, FTLStartedEvent>(OnEmergencyFTL);
         SubscribeLocalEvent<EmergencyShuttleComponent, FTLCompletedEvent>(OnEmergencyFTLComplete);
@@ -564,8 +565,40 @@ public sealed partial class EmergencyShuttleSystem : SharedEmergencyShuttleSyste
         component.MapEntity = map;
         _metaData.SetEntityName(map, Loc.GetString("map-name-centcomm"));
         component.Entity = grid;
-        _shuttle.TryAddFTLDestination(mapId, true, out _);
+        var hasDisk = false;
+        var disks = AllEntityQuery<CentcommCoordinatesDiskComponent, ShuttleDestinationCoordinatesComponent>();
+        while (disks.MoveNext(out var disk, out _, out var coordinates))
+        {
+            SetCentcommDiskDestination(disk, coordinates, map);
+            hasDisk = true;
+        }
+
+        _shuttle.TryAddFTLDestination(mapId, enabled: hasDisk, requireDisk: hasDisk, beaconsOnly: false, out _);
         Log.Info($"Created centcomm grid {ToPrettyString(grid)} on map {ToPrettyString(map)} for station {ToPrettyString(station)}");
+    }
+
+    private void OnCentcommDiskInit(EntityUid disk, CentcommCoordinatesDiskComponent component, MapInitEvent args)
+    {
+        if (!TryComp<ShuttleDestinationCoordinatesComponent>(disk, out var coordinates))
+            return;
+
+        var stations = AllEntityQuery<StationCentcommComponent>();
+        while (stations.MoveNext(out var centcomm))
+        {
+            if (centcomm.MapEntity is not { } map || TerminatingOrDeleted(map))
+                continue;
+
+            SetCentcommDiskDestination(disk, coordinates, map);
+            if (!ShuttlesLeft)
+                _shuttle.TryAddFTLDestination(Transform(map).MapID, enabled: true, requireDisk: true, beaconsOnly: false, out _);
+            return;
+        }
+    }
+
+    private void SetCentcommDiskDestination(EntityUid disk, ShuttleDestinationCoordinatesComponent coordinates, EntityUid map)
+    {
+        coordinates.Destination = map;
+        Dirty(disk, coordinates);
     }
 
     public HashSet<EntityUid> GetCentcommMaps()

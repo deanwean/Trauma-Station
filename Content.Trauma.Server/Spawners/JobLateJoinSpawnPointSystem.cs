@@ -12,7 +12,7 @@ using Robust.Shared.Random;
 namespace Content.Trauma.Server.Spawners;
 
 /// <summary>
-/// Sends late joiners to marked job spawn points before trying cryosleep or arrivals.
+/// Sends players to marked job spawn points before trying cryosleep or arrivals.
 /// </summary>
 public sealed partial class JobLateJoinSpawnPointSystem : EntitySystem
 {
@@ -30,17 +30,21 @@ public sealed partial class JobLateJoinSpawnPointSystem : EntitySystem
 
     private void OnPlayerSpawning(PlayerSpawningEvent args)
     {
-        if (args.SpawnResult != null || args.Job == null || _ticker.RunLevel != GameRunLevel.InRound)
+        if (args.SpawnResult != null || args.Job == null)
             return;
 
+        var lateJoin = _ticker.RunLevel == GameRunLevel.InRound;
         var positions = new List<EntityCoordinates>();
         var query = EntityQueryEnumerator<JobLateJoinSpawnPointComponent, SpawnPointComponent, TransformComponent>();
-        while (query.MoveNext(out var uid, out _, out var point, out var xform))
+        while (query.MoveNext(out var uid, out var route, out var point, out var xform))
         {
-            if (point.SpawnType != SpawnPointType.Job || point.Job != args.Job)
+            if (point.SpawnType != SpawnPointType.Job || point.Job != args.Job ||
+                !lateJoin && !route.AllowUnassignedGrid)
                 continue;
 
-            if (args.Station != null && _station.GetOwningStation(uid, xform) != args.Station)
+            var owningStation = _station.GetOwningStation(uid, xform);
+            if (args.Station != null && owningStation != args.Station &&
+                (owningStation != null || !route.AllowUnassignedGrid))
                 continue;
 
             positions.Add(xform.Coordinates);

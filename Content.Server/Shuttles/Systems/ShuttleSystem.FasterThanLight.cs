@@ -56,11 +56,6 @@ public sealed partial class ShuttleSystem
     private TimeSpan _hyperspaceKnockdownTime = TimeSpan.FromSeconds(5);
 
     /// <summary>
-    /// Left-side of the station we're allowed to use
-    /// </summary>
-    private float _index;
-
-    /// <summary>
     /// Space between grids within hyperspace.
     /// </summary>
     private const float Buffer = 5f;
@@ -110,27 +105,31 @@ public sealed partial class ShuttleSystem
     }
 
     /// <summary>
-    /// Ensures the FTL map exists and returns it.
+    /// Ensures there is an FTL map for shuttles heading in this direction.
+    /// Keeping different headings on separate maps prevents their lanes from crossing.
     /// </summary>
-    private EntityUid EnsureFTLMap()
+    private Entity<FTLMapComponent> EnsureFTLMap(Direction direction)
     {
         var query = AllEntityQuery<FTLMapComponent>();
 
-        while (query.MoveNext(out var uid, out _))
+        while (query.MoveNext(out var uid, out var component))
         {
-            return uid;
+            if (component.TravelDirection == direction)
+                return (uid, component);
         }
 
         var mapUid = _mapSystem.CreateMap(out var mapId);
         var ftlMap = AddComp<FTLMapComponent>(mapUid);
+        ftlMap.TravelDirection = direction;
+        Dirty(mapUid, ftlMap);
 
         _metadata.SetEntityName(mapUid, "FTL");
-        Log.Debug($"Setup hyperspace map at {mapUid}");
+        Log.Debug($"Setup {direction}bound hyperspace map at {mapUid}");
         DebugTools.Assert(!_mapSystem.IsPaused(mapId));
         var parallax = EnsureComp<ParallaxComponent>(mapUid);
         parallax.Parallax = ftlMap.Parallax;
 
-        return mapUid;
+        return (mapUid, ftlMap);
     }
 
     public StartEndTime GetStateTime(FTLComponent component)
@@ -349,7 +348,7 @@ public sealed partial class ShuttleSystem
         }
 
         _thruster.DisableLinearThrusters(shuttle);
-        _thruster.EnableLinearThrustDirection(shuttle, DirectionFlag.North);
+        _thruster.EnableLinearThrustDirection(shuttle, shuttle.FtlForward.AsFlag());
         _thruster.SetAngularThrustVisualState(shuttle, false);
         _dockSystem.UndockDocks(uid);
 
@@ -360,7 +359,7 @@ public sealed partial class ShuttleSystem
         component.StartupStream = audio?.Entity;
 
         // Make sure the map is setup before we leave to avoid pop-in (e.g. parallax).
-        EnsureFTLMap();
+        EnsureFTLMap(shuttle.FtlForward);
         return true;
     }
 
@@ -380,10 +379,13 @@ public sealed partial class ShuttleSystem
         var fromRotation = _transform.GetWorldRotation(xform);
 
         var grid = _mapGridQuery.Comp(uid);
-        var width = grid.LocalAABB.Width;
-        var ftlMap = EnsureFTLMap();
+        var direction = entity.Comp2.FtlForward;
+        var forward = direction.ToVec();
+        var across = new Vector2(forward.Y, -forward.X);
+        var bounds = grid.LocalAABB;
+        var laneWidth = MathF.Abs(across.X) * bounds.Width + MathF.Abs(across.Y) * bounds.Height;
+        var ftlMap = EnsureFTLMap(direction);
         var body = _physicsQuery.GetComponent(entity);
-        var shuttleCenter = grid.LocalAABB.Center;
 
         // Leave audio at the old spot
         // Just so we don't clip
@@ -398,7 +400,8 @@ public sealed partial class ShuttleSystem
         }
 
         // Offset the start by buffer range just to avoid overlap.
-        var ftlStart = new EntityCoordinates(ftlMap, new Vector2(_index + width / 2f, 0f) - shuttleCenter);
+        var laneCenter = across * (ftlMap.Comp.Index + laneWidth / 2f);
+        var ftlStart = new EntityCoordinates(ftlMap, laneCenter - bounds.Center);
 
         // Store the matrix for the grid prior to movement. This means any entities we need to leave behind we can make sure their positions are updated.
         // Setting the entity to map directly may run grid traversal (at least at time of writing this).
@@ -407,13 +410,12 @@ public sealed partial class ShuttleSystem
         _transform.SetCoordinates(entity.Owner, ftlStart);
         LeaveNoFTLBehind((entity.Owner, xform), oldGridMatrix, oldMapUid);
 
-        // Reset rotation so they always face the same direction.
         _transform.SetLocalRotation(entity, Angle.Zero, xform);
-        _index += width + Buffer;
+        ftlMap.Comp.Index += laneWidth + Buffer;
         comp.StateTime = StartEndTime.FromCurTime(_gameTiming, comp.TravelTime - DefaultArrivalTime);
 
         Enable(uid, component: body);
-        _physics.SetLinearVelocity(uid, new Vector2(0f, 20f), body: body);
+        _physics.SetLinearVelocity(uid, forward * 20f, body: body);
         _physics.SetAngularVelocity(uid, 0f, body: body);
 
         _dockSystem.SetDockBolts(uid, true);
@@ -450,7 +452,7 @@ public sealed partial class ShuttleSystem
         }
 
         _thruster.DisableLinearThrusters(shuttle);
-        _thruster.EnableLinearThrustDirection(shuttle, DirectionFlag.South);
+        _thruster.EnableLinearThrustDirection(shuttle, (-shuttle.FtlForward.ToVec()).GetDir().AsFlag());
 
         _console.RefreshShuttleConsoles(entity.Owner);
     }

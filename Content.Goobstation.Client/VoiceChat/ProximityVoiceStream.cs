@@ -41,6 +41,7 @@ internal sealed class ProximityVoiceStream(IAudioManager audio, VoiceDeliveryRou
     public bool Playing => _playing.Count > 0;
     public float Activity => Playing ? Math.Clamp(_levels.Overall * 3f, 0f, 1f) : 0f;
     public float Volume { get; set; } = 1f;
+    public string SpeakerName = string.Empty;
     public string RadioChannel { get; init; } = string.Empty;
     public NetEntity Speaker { get; init; }
     private Chunk? _current;

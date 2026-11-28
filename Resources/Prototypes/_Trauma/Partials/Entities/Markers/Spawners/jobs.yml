@@ -5,18 +5,22 @@
   name: ERT commander spawn point
   components:
   - type: JobLateJoinSpawnPoint
+    allowUnassignedGrid: true
 
 - type: entity
   id: SpawnPointERTMedical
   components:
   - type: JobLateJoinSpawnPoint
+    allowUnassignedGrid: true
 
 - type: entity
   id: SpawnPointERTEngineer
   components:
   - type: JobLateJoinSpawnPoint
+    allowUnassignedGrid: true
 
 - type: entity
   id: SpawnPointERTSecurity
   components:
   - type: JobLateJoinSpawnPoint
+    allowUnassignedGrid: true

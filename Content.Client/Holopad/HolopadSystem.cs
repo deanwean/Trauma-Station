@@ -20,11 +20,17 @@ public sealed partial class HolopadSystem : SharedHolopadSystem
         base.Initialize();
 
         SubscribeLocalEvent<HolopadHologramComponent, ComponentStartup>(OnComponentStartup);
+        SubscribeLocalEvent<HolopadHologramComponent, AfterAutoHandleStateEvent>(OnAfterState);
         SubscribeLocalEvent<HolopadHologramComponent, BeforePostShaderRenderEvent>(OnShaderRender);
         SubscribeAllEvent<TypingChangedEvent>(OnTypingChanged);
     }
 
     private void OnComponentStartup(Entity<HolopadHologramComponent> entity, ref ComponentStartup ev)
+    {
+        UpdateHologramSprite(entity, entity.Comp.LinkedEntity);
+    }
+
+    private void OnAfterState(Entity<HolopadHologramComponent> entity, ref AfterAutoHandleStateEvent ev)
     {
         UpdateHologramSprite(entity, entity.Comp.LinkedEntity);
     }
@@ -62,26 +68,17 @@ public sealed partial class HolopadSystem : SharedHolopadSystem
         for (var i = hologramSprite.AllLayers.Count() - 1; i >= 0; i--)
             _sprite.RemoveLayer((hologram, hologramSprite), i);
 
-        if (TryComp<SpriteComponent>(target, out var targetSprite))
+        if (TryComp<HolographicAvatarComponent>(target, out var avatar) && avatar.LayerData is { Length: > 0 } layers)
         {
-            // Use the target's holographic avatar (if available)
-            if (TryComp<HolographicAvatarComponent>(target, out var targetAvatar) &&
-                targetAvatar.LayerData != null)
-            {
-                for (var i = 0; i < targetAvatar.LayerData.Length; i++)
-                {
-                    _sprite.AddLayer((hologram, hologramSprite), targetAvatar.LayerData[i], i);
-                }
-            }
-
-            // Otherwise copy the target's current physical appearance
-            else
-            {
-                _sprite.CopySprite((target.Value, targetSprite), (hologram, hologramSprite));
-            }
+            for (var i = 0; i < layers.Length; i++)
+                _sprite.AddLayer((hologram, hologramSprite), layers[i], i);
         }
-
-        // There is no target, display a default sprite instead (if available)
+        else if (TryComp<SpriteComponent>(target, out var targetSprite) && targetSprite.Visible &&
+                 targetSprite.AllLayers.Any(layer => layer.Visible))
+        {
+            _sprite.CopySprite((target.Value, targetSprite), (hologram, hologramSprite));
+        }
+        // Keep a visible projection when the replicated target has no usable sprite yet.
         else
         {
             if (string.IsNullOrEmpty(holopadhologram.RsiPath) || string.IsNullOrEmpty(holopadhologram.RsiState))

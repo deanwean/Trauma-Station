@@ -114,22 +114,8 @@ public sealed partial class EmergencyShuttleSystem
 
     private void UpdateEmergencyConsole(float frameTime)
     {
-        // Add some buffer time so eshuttle always first.
-        var minTime = -(TransitTime - (_shuttle.DefaultStartupTime + _shuttle.DefaultTravelTime + 1f));
-
-        // TODO: I know this is shit but I already just cleaned up a billion things.
-
-        // This is very cursed spaghetti code. I don't even know what the fuck this is doing or why it exists.
-        // But I think it needs to be less than or equal to zero or the shuttle might never leave???
-        // TODO Shuttle AAAAAAAAAAAAAAAAAAAAAAAAA
-        // Clean this up, just have a single timer with some state system.
-        // I.e., dont infer state from the current interval that the accumulator is in???
-        minTime = Math.Min(0, minTime); // ????
-
-        if (ConsoleAccumulator < minTime)
-        {
+        if (ConsoleAccumulator <= -TransitTime)
             return;
-        }
 
         ConsoleAccumulator -= frameTime;
 
@@ -203,27 +189,25 @@ public sealed partial class EmergencyShuttleSystem
         if (!ShuttlesLeft && ConsoleAccumulator <= 0f)
         {
             ShuttlesLeft = true;
+            OpenEvacuationDestinations();
             _chatSystem.DispatchGlobalAnnouncement(Loc.GetString("emergency-shuttle-left", ("transitTime", $"{TransitTime:0}")));
 
             Timer.Spawn((int)(TransitTime * 1000) + _bufferTime.Milliseconds, () => _roundEnd.EndRound(), _roundEndCancelToken?.Token ?? default);
         }
 
-        // All the others.
-        if (ConsoleAccumulator < minTime)
+    }
+
+    private void OpenEvacuationDestinations()
+    {
+        var stations = AllEntityQuery<StationCentcommComponent>();
+        while (stations.MoveNext(out var centcomm))
         {
-            var query = AllEntityQuery<StationCentcommComponent, TransformComponent>();
+            if (centcomm.MapEntity is not { } map || TerminatingOrDeleted(map))
+                continue;
 
-            // Guarantees that emergency shuttle arrives first before anyone else can FTL.
-            while (query.MoveNext(out var comp, out var centcommXform))
-            {
-                if (Deleted(comp.Entity))
-                    continue;
-
-                if (_shuttle.TryAddFTLDestination(centcommXform.MapID, true, out var ftlComp))
-                {
-                    _shuttle.SetFTLWhitelist((centcommXform.MapUid!.Value, ftlComp), null);
-                }
-            }
+            var mapId = Transform(map).MapID;
+            if (_shuttle.TryAddFTLDestination(mapId, enabled: true, requireDisk: false, beaconsOnly: false, out var destination))
+                _shuttle.SetFTLWhitelist((map, destination), null);
         }
     }
 

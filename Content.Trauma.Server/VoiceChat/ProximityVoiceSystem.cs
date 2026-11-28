@@ -12,6 +12,7 @@ using Content.Shared.Chat;
 using Content.Shared.Examine;
 using Content.Shared.GameTicking;
 using Content.Shared.Ghost.Components;
+using Content.Shared.IdentityManagement;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Speech;
 using Content.Trauma.Shared.Language.Systems;
@@ -45,6 +46,7 @@ public sealed partial class ProximityVoiceSystem : EntitySystem
         public long NextSpeechAttempt;
         public long NextTalkState;
         public bool TalkBlocked;
+        public readonly UnfamiliarVoiceFilter UnfamiliarFilter = new();
         public readonly VoiceLevelAnalyzer LevelAnalyzer = new();
         public VoiceEffectProcessor? Effect;
         public VoiceEffectSettings AppliedEffect;
@@ -58,7 +60,7 @@ public sealed partial class ProximityVoiceSystem : EntitySystem
     // Only ticket redemption and VoiceCapture's bounded queue run on HTTP worker threads.
     private readonly Dictionary<string, Participant> _tickets = new(StringComparer.Ordinal);
     private readonly Dictionary<ICommonSession, Participant> _participants = new();
-    private readonly Dictionary<(VoiceDeliveryRoute Route, NetEntity Emitter), List<INetChannel>> _destinations = new();
+    private readonly Dictionary<(VoiceDeliveryRoute Route, NetEntity Emitter, bool Unfamiliar), List<INetChannel>> _destinations = new();
     private readonly List<byte[]> _frames = new();
     private readonly CancellationTokenSource _shutdown = new();
     private volatile bool _enabled;
@@ -317,7 +319,8 @@ public sealed partial class ProximityVoiceSystem : EntitySystem
                 var camera = HasComp<StationAiHeldComponent>(listener) ? FindAiEmitter(listener, range, out _) : null;
                 var cameraPosition = camera is { } cameraUid ? _transform.GetMapCoordinates(cameraUid) : MapCoordinates.Nullspace;
                 var monitor = devices && emitter != null && camera != null && origin.InRange(cameraPosition, range);
-                if (!_language.CanUnderstand(listener, language!.ID))
+                var unfamiliar = !_language.CanUnderstand(listener, language!.ID);
+                if (unfamiliar)
                 {
                     if (local && now >= participant.NextUnfamiliarCue.GetValueOrDefault(other) && audible)
                     {
@@ -325,37 +328,52 @@ public sealed partial class ProximityVoiceSystem : EntitySystem
                         var visibleSource = _examine.CanExamine(listener, speaker) ? source : NetEntity.Invalid;
                         RaiseNetworkEvent(new VoiceUnfamiliarSpeechEvent(visibleSource), other);
                     }
-                    continue;
                 }
 
                 if (local)
-                    AddDestination(directRoute, GetNetEntity(emitter!.Value), other.Channel);
+                    AddDestination(directRoute, GetNetEntity(emitter!.Value), other.Channel, unfamiliar);
                 else if (monitor)
-                    AddDestination(VoiceDeliveryRoute.Monitor, NetEntity.Invalid, other.Channel);
+                    AddDestination(VoiceDeliveryRoute.Monitor, NetEntity.Invalid, other.Channel, unfamiliar);
                 else if (devices && FindHolopadRelay(position) is {} holopad)
-                    AddDestination(VoiceDeliveryRoute.Holopad, GetNetEntity(holopad), other.Channel);
+                    AddDestination(VoiceDeliveryRoute.Holopad, GetNetEntity(holopad), other.Channel, unfamiliar);
                 else if (_broadcastRecipients.Contains(other))
-                    AddDestination(VoiceDeliveryRoute.Broadcast, NetEntity.Invalid, other.Channel);
+                    AddDestination(VoiceDeliveryRoute.Broadcast, NetEntity.Invalid, other.Channel, unfamiliar);
                 else if (radio is {} transmission && ReceivesHeadsetVoice(listener, transmission))
-                    AddDestination(VoiceDeliveryRoute.Radio, NetEntity.Invalid, other.Channel);
+                    AddDestination(VoiceDeliveryRoute.Radio, NetEntity.Invalid, other.Channel, unfamiliar);
                 else if (GetRadioSpeaker(position, range) is {} radioSpeaker)
-                    AddDestination(VoiceDeliveryRoute.RadioSpeaker, GetNetEntity(radioSpeaker), other.Channel);
+                    AddDestination(VoiceDeliveryRoute.RadioSpeaker, GetNetEntity(radioSpeaker), other.Channel, unfamiliar);
                 else if (devices && TryGetPhoneReceiver(listener, position, range, out var receiver, out var privateHandset))
                 {
                     if (privateHandset)
-                        AddDestination(VoiceDeliveryRoute.Handset, NetEntity.Invalid, other.Channel);
+                        AddDestination(VoiceDeliveryRoute.Handset, NetEntity.Invalid, other.Channel, unfamiliar);
                     else
-                        AddDestination(VoiceDeliveryRoute.Speakerphone, GetNetEntity(receiver), other.Channel);
+                        AddDestination(VoiceDeliveryRoute.Speakerphone, GetNetEntity(receiver), other.Channel, unfamiliar);
                 }
             }
 
             if (_destinations.Count == 0)
                 continue;
 
+            var needsReplacement = false;
+            var needsClearAudio = false;
+            var speakerName = string.Empty;
+            foreach (var destination in _destinations.Keys)
+            {
+                needsReplacement |= destination.Unfamiliar;
+                needsClearAudio |= !destination.Unfamiliar;
+                if (speakerName.Length == 0 && destination.Route is VoiceDeliveryRoute.Holopad or VoiceDeliveryRoute.Broadcast)
+                {
+                    var name = Name(Identity.Entity(speaker, EntityManager));
+                    speakerName = name.Length > 80 ? name[..80] : name;
+                }
+            }
+
             UpdateVoiceEffect(participant, speaker, dead, megaphone);
             foreach (var frame in _frames)
             {
-                ApplyVoiceEffect(participant, frame);
+                var replacement = needsReplacement ? participant.UnfamiliarFilter.Replace(frame) : null;
+                if (needsClearAudio)
+                    ApplyVoiceEffect(participant, frame);
                 var sequence = participant.Sequence++;
                 foreach (var (destination, listeners) in _destinations)
                 {
@@ -369,18 +387,21 @@ public sealed partial class ProximityVoiceSystem : EntitySystem
                         RadioChannel = destination.Route is VoiceDeliveryRoute.Radio or VoiceDeliveryRoute.RadioSpeaker
                             ? radio?.Channel.ID ?? string.Empty
                             : string.Empty,
+                        SpeakerName = destination.Route is VoiceDeliveryRoute.Holopad or VoiceDeliveryRoute.Broadcast
+                            ? speakerName
+                            : string.Empty,
                         Sequence = sequence,
-                        Payload = frame,
+                        Payload = destination.Unfamiliar ? replacement! : frame,
                     }, listeners);
                 }
             }
         }
     }
 
-    private void AddDestination(VoiceDeliveryRoute route, NetEntity emitter, INetChannel listener)
+    private void AddDestination(VoiceDeliveryRoute route, NetEntity emitter, INetChannel listener, bool unfamiliar = false)
     {
-        if (!_destinations.TryGetValue((route, emitter), out var listeners))
-            _destinations[(route, emitter)] = listeners = new List<INetChannel>();
+        if (!_destinations.TryGetValue((route, emitter, unfamiliar), out var listeners))
+            _destinations[(route, emitter, unfamiliar)] = listeners = new List<INetChannel>();
         listeners.Add(listener);
     }
 
